@@ -1,0 +1,10 @@
+[package]
+name = "rusty-jam-08-21"
+version = "0.1.0"
+edition = "2018"
+license = "MIT"
+repository = "https://github.com/Carlton-Perkins/rusty-jam-08-21"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
