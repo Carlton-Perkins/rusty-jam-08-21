@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 10,
+	"nextUid": 14,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -112,6 +112,31 @@
 			"pivotX": 0.5,
 			"pivotY": 0.5,
 			"fieldDefs": []
+		},
+		{
+			"identifier": "Enemy_Start_Location",
+			"uid": 11,
+			"tags": [],
+			"width": 64,
+			"height": 64,
+			"resizableX": false,
+			"resizableY": false,
+			"keepAspectRatio": false,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#F00101",
+			"renderMode": "Tile",
+			"showName": true,
+			"tilesetId": 12,
+			"tileId": 0,
+			"tileRenderMode": "FitInside",
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0,
+			"pivotY": 0,
+			"fieldDefs": []
 		}
 	], "tilesets": [
 		{
@@ -129,7 +154,7 @@
 			"enumTags": [ { "enumValueId": "NoCollide", "tileIds": [1] }, { "enumValueId": "Collide", "tileIds": [0,4] } ],
 			"customData": [],
 			"savedSelections": [],
-			"cachedPixelData": { "opaqueTiles": "1100100000000000", "averageColors": "f565f97400000000fa5300000000000000000000000000000000000000000000" }
+			"cachedPixelData": { "opaqueTiles": "1100000000000000", "averageColors": "f555f97400000000988800000000000000000000000000000000000000000000" }
 		},
 		{
 			"__cWid": 1,
@@ -147,6 +172,57 @@
 			"customData": [],
 			"savedSelections": [],
 			"cachedPixelData": { "opaqueTiles": "0", "averageColors": "3447" }
+		},
+		{
+			"__cWid": 4,
+			"__cHei": 4,
+			"identifier": "TestTileSet",
+			"uid": 10,
+			"relPath": "TileTests1.png",
+			"pxWid": 256,
+			"pxHei": 256,
+			"tileGridSize": 64,
+			"spacing": 0,
+			"padding": 0,
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": { "opaqueTiles": "1110111101000111", "averageColors": "f333f665f3330000f555f333f565f4440000f876000000009888f863f876f974" }
+		},
+		{
+			"__cWid": 1,
+			"__cHei": 1,
+			"identifier": "Enemy",
+			"uid": 12,
+			"relPath": "enemy.sprite.png",
+			"pxWid": 64,
+			"pxHei": 64,
+			"tileGridSize": 64,
+			"spacing": 0,
+			"padding": 0,
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": { "opaqueTiles": "0", "averageColors": "3f00" }
+		},
+		{
+			"__cWid": 4,
+			"__cHei": 1,
+			"identifier": "Projectile",
+			"uid": 13,
+			"relPath": "projectile.spritemap.png",
+			"pxWid": 256,
+			"pxHei": 64,
+			"tileGridSize": 64,
+			"spacing": 0,
+			"padding": 0,
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "0a33000000000000" }
 		}
 	], "enums": [{ "identifier": "Collideable", "uid": 9, "values": [ { "id": "NoCollide", "tileId": null, "color": 0, "__tileSrcRect": null }, { "id": "Collide", "tileId": null, "color": 0, "__tileSrcRect": null } ], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null }], "externalEnums": [], "levelFields": [] },
 	"levels": [
@@ -189,7 +265,7 @@
 					"intGridCsv": [],
 					"autoLayerTiles": [],
 					"seed": 9210207,
-					"overrideTilesetUid": null,
+					"overrideTilesetUid": 2,
 					"gridTiles": [
 						{ "px": [0,0], "src": [0,0], "f": 0, "t": 0, "d": [0] },
 						{ "px": [64,0], "src": [0,0], "f": 0, "t": 0, "d": [1] },
@@ -253,7 +329,6 @@
 						{ "px": [960,512], "src": [0,0], "f": 0, "t": 0, "d": [143] },
 						{ "px": [0,576], "src": [0,0], "f": 0, "t": 0, "d": [144] },
 						{ "px": [320,576], "src": [0,0], "f": 0, "t": 0, "d": [149] },
-						{ "px": [576,576], "src": [0,192], "f": 0, "t": 12, "d": [153] },
 						{ "px": [640,576], "src": [0,0], "f": 0, "t": 0, "d": [154] },
 						{ "px": [960,576], "src": [0,0], "f": 0, "t": 0, "d": [159] },
 						{ "px": [0,640], "src": [0,0], "f": 0, "t": 0, "d": [160] },
@@ -264,21 +339,16 @@
 						{ "px": [640,640], "src": [0,0], "f": 0, "t": 0, "d": [170] },
 						{ "px": [960,640], "src": [0,0], "f": 0, "t": 0, "d": [175] },
 						{ "px": [0,704], "src": [0,0], "f": 0, "t": 0, "d": [176] },
-						{ "px": [256,704], "src": [64,64], "f": 0, "t": 5, "d": [180] },
 						{ "px": [960,704], "src": [0,0], "f": 0, "t": 0, "d": [191] },
 						{ "px": [0,768], "src": [0,0], "f": 0, "t": 0, "d": [192] },
 						{ "px": [128,768], "src": [0,0], "f": 0, "t": 0, "d": [194] },
 						{ "px": [192,768], "src": [0,0], "f": 0, "t": 0, "d": [195] },
-						{ "px": [256,768], "src": [64,64], "f": 0, "t": 5, "d": [196] },
 						{ "px": [768,768], "src": [0,0], "f": 0, "t": 0, "d": [204] },
 						{ "px": [832,768], "src": [0,0], "f": 0, "t": 0, "d": [205] },
 						{ "px": [960,768], "src": [0,0], "f": 0, "t": 0, "d": [207] },
 						{ "px": [0,832], "src": [0,0], "f": 0, "t": 0, "d": [208] },
 						{ "px": [128,832], "src": [0,0], "f": 0, "t": 0, "d": [210] },
 						{ "px": [192,832], "src": [0,0], "f": 0, "t": 0, "d": [211] },
-						{ "px": [256,832], "src": [64,64], "f": 0, "t": 5, "d": [212] },
-						{ "px": [320,832], "src": [64,64], "f": 0, "t": 5, "d": [213] },
-						{ "px": [512,832], "src": [64,64], "f": 0, "t": 5, "d": [216] },
 						{ "px": [768,832], "src": [0,0], "f": 0, "t": 0, "d": [220] },
 						{ "px": [832,832], "src": [0,0], "f": 0, "t": 0, "d": [221] },
 						{ "px": [960,832], "src": [0,0], "f": 0, "t": 0, "d": [223] },
@@ -336,6 +406,28 @@
 							"height": 64,
 							"defUid": 3,
 							"px": [544,864],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Enemy_Start_Location",
+							"__grid": [3,5],
+							"__pivot": [0,0],
+							"__tile": { "tilesetUid": 12, "srcRect": [0,0,64,64] },
+							"width": 64,
+							"height": 64,
+							"defUid": 11,
+							"px": [192,320],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Enemy_Start_Location",
+							"__grid": [13,5],
+							"__pivot": [0,0],
+							"__tile": { "tilesetUid": 12, "srcRect": [0,0,64,64] },
+							"width": 64,
+							"height": 64,
+							"defUid": 11,
+							"px": [832,320],
 							"fieldInstances": []
 						}
 					]

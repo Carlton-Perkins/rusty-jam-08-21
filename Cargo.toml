@@ -15,7 +15,9 @@ bevy_retrograde = { version = "0.2.0", features = ["audio", "text", "physics", "
 log = "0.4.14"
 hex = "0.4.3"
 glam = "0.13.1"
-heron = "0.11.0"
+heron = { version = "0.11.0", features = ["2d"]}
+rayon = "1.5.1"
+rand = "0.8.4"
 
 # pretty_env_logger = "0.4.0"
 
