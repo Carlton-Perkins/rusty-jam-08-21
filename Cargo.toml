@@ -8,16 +8,17 @@ repository = "https://github.com/Carlton-Perkins/rusty-jam-08-21"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = {version = "0.5.0", default-features = false, features = []}
-#bevy_egui = "0.6.2"
-#bevy-inspector-egui = "0.6.1"
-bevy_retrograde = { version = "0.2.0", features = ["audio", "text", "physics", "ldtk", "epaint"] }
-log = "0.4.14"
-hex = "0.4.3"
-glam = "0.13.1"
+bevy = {version = "0.5.0", features = ["dynamic"]}
+bevy_egui = "0.6.2"
+bevy-inspector-egui = "0.6.1"
+#log = "0.4.14"
+#hex = "0.4.3"
+#glam = "0.13.1"
 heron = { version = "0.11.0", features = ["2d"]}
-rayon = "1.5.1"
-rand = "0.8.4"
+#rayon = "1.5.1"
+#rand = "0.8.4"
+ldtk_rust = "0.5.2"
+
 
 # pretty_env_logger = "0.4.0"
 

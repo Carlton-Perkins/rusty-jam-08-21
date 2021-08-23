@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 14,
+	"nextUid": 17,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -137,6 +137,52 @@
 			"pivotX": 0,
 			"pivotY": 0,
 			"fieldDefs": []
+		},
+		{
+			"identifier": "Patrol_Path",
+			"uid": 14,
+			"tags": [],
+			"width": 16,
+			"height": 16,
+			"resizableX": false,
+			"resizableY": false,
+			"keepAspectRatio": false,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": true,
+			"color": "#94D9B3",
+			"renderMode": "Ellipse",
+			"showName": true,
+			"tilesetId": null,
+			"tileId": null,
+			"tileRenderMode": "Stretch",
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0.5,
+			"pivotY": 0.5,
+			"fieldDefs": [
+				{
+					"identifier": "Path",
+					"__type": "Array<Point>",
+					"uid": 16,
+					"type": "F_Point",
+					"isArray": true,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "PointPath",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -151,8 +197,14 @@
 			"spacing": 0,
 			"padding": 0,
 			"tagsSourceEnumUid": 9,
-			"enumTags": [ { "enumValueId": "NoCollide", "tileIds": [1] }, { "enumValueId": "Collide", "tileIds": [0,4] } ],
-			"customData": [],
+			"enumTags": [ { "enumValueId": "NoCollide", "tileIds": [1,6] }, { "enumValueId": "Collide", "tileIds": [0,4,5] }, { "enumValueId": "Nothing", "tileIds": [] } ],
+			"customData": [
+				{ "tileId": 0, "data": "Wall" },
+				{ "tileId": 1, "data": "Floor" },
+				{ "tileId": 4, "data": "LockedDoor" },
+				{ "tileId": 5, "data": "Gate" },
+				{ "tileId": 6, "data": "OpenDoor" }
+			],
 			"savedSelections": [],
 			"cachedPixelData": { "opaqueTiles": "1100000000000000", "averageColors": "f555f97400000000988800000000000000000000000000000000000000000000" }
 		},
@@ -224,7 +276,11 @@
 			"savedSelections": [],
 			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "0a33000000000000" }
 		}
-	], "enums": [{ "identifier": "Collideable", "uid": 9, "values": [ { "id": "NoCollide", "tileId": null, "color": 0, "__tileSrcRect": null }, { "id": "Collide", "tileId": null, "color": 0, "__tileSrcRect": null } ], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null }], "externalEnums": [], "levelFields": [] },
+	], "enums": [{ "identifier": "Collideable", "uid": 9, "values": [
+		{ "id": "NoCollide", "tileId": null, "color": 0, "__tileSrcRect": null },
+		{ "id": "Collide", "tileId": null, "color": 0, "__tileSrcRect": null },
+		{ "id": "Nothing", "tileId": null, "color": 0, "__tileSrcRect": null }
+	], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null }], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
 			"identifier": "Level_0",
@@ -410,13 +466,13 @@
 						},
 						{
 							"__identifier": "Enemy_Start_Location",
-							"__grid": [3,5],
+							"__grid": [2,6],
 							"__pivot": [0,0],
 							"__tile": { "tilesetUid": 12, "srcRect": [0,0,64,64] },
 							"width": 64,
 							"height": 64,
 							"defUid": 11,
-							"px": [192,320],
+							"px": [128,384],
 							"fieldInstances": []
 						},
 						{
@@ -429,6 +485,35 @@
 							"defUid": 11,
 							"px": [832,320],
 							"fieldInstances": []
+						},
+						{
+							"__identifier": "Patrol_Path",
+							"__grid": [2,6],
+							"__pivot": [0.5,0.5],
+							"__tile": null,
+							"width": 16,
+							"height": 16,
+							"defUid": 14,
+							"px": [160,416],
+							"fieldInstances": [{
+								"__identifier": "Path",
+								"__value": [ { "cx": 2, "cy": 9 }, { "cx": 4, "cy": 9 }, { "cx": 4, "cy": 6 }, { "cx": 2, "cy": 6 } ],
+								"__type": "Array<Point>",
+								"defUid": 16,
+								"realEditorValues": [ {
+									"id": "V_String",
+									"params": ["2,9"]
+								}, {
+									"id": "V_String",
+									"params": ["4,9"]
+								}, {
+									"id": "V_String",
+									"params": ["4,6"]
+								}, {
+									"id": "V_String",
+									"params": ["2,6"]
+								} ]
+							}]
 						}
 					]
 				},
