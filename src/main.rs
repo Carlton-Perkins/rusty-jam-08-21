@@ -1,5 +1,10 @@
+mod entity_class;
 mod map;
+mod tags;
 
+use crate::entity_class::EntityClasses;
+use crate::map::{MapLocation, MapPlugin, MapScale};
+use crate::tags::Player;
 use bevy::app::AppExit;
 use bevy::asset::AssetPath;
 use bevy::core::FixedTimestep;
@@ -24,7 +29,6 @@ enum GameLayer {
 }
 
 // Marker Tags
-struct Player;
 struct DebugLine;
 struct MainCamera;
 
@@ -40,14 +44,18 @@ fn main() {
             ..Default::default()
         })
         .insert_resource(Gravity::from(Vec3::new(0.0, 0.0, 0.0)))
+        .insert_resource(MapLocation("assets/map.ldtk".into()))
+        .insert_resource(MapScale(0.25))
         .add_plugins(DefaultPlugins)
+        .add_plugin(MapPlugin)
         .add_plugin(PhysicsPlugin::default())
         .add_plugin(EguiPlugin)
         .add_plugin(WorldInspectorPlugin::new())
+        .add_plugin(EntityClasses)
         // .add_plugin(FrameTimeDiagnosticsPlugin::default())
         // .add_plugin(LogDiagnosticsPlugin::default())
-        .add_startup_system(setup_level.system())
-        .add_startup_system(spawn_player.system())
+        // .add_startup_system(setup_level.system())
+        // .add_startup_system(spawn_player.system())
         // .add_system(update_map_collisions.system())
         .add_stage(
             GameStage,
@@ -233,61 +241,6 @@ fn setup_level(
     // });
 }
 
-fn spawn_player(
-    mut c: Commands,
-    assets: Res<AssetServer>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
-    let player_sprite = assets.load("player.sprite.png");
-
-    // Spawn camera
-    let camera = c
-        .spawn()
-        .insert_bundle(OrthographicCameraBundle::new_2d())
-        .insert(MainCamera)
-        .id();
-
-    c.spawn()
-        .insert_bundle(SpriteBundle {
-            material: materials.add(player_sprite.into()),
-            transform: Transform::from_xyz(500., -500., 10.),
-            ..Default::default()
-        })
-        .insert(Player)
-        .insert(Velocity::from_linear(Vec3::default()))
-        .insert(RigidBody::Dynamic)
-        .insert(RotationConstraints::lock())
-        .insert(CollisionShape::Cuboid {
-            half_extends: Vec3::new(30., 30., 0.),
-            border_radius: None,
-        })
-        // .insert(TesselatedCollider {
-        //     image: player_sprite,
-        //     tesselator_config: TesselatedColliderConfig {
-        //         vertice_separation: 0.,
-        //         ..Default::default()
-        //     },
-        //     ..Default::default()
-        // })
-        .insert(
-            CollisionLayers::none()
-                .with_group(GameLayer::Player)
-                .with_masks(&[GameLayer::World, GameLayer::Enemy]),
-        )
-        // .insert_bundle(ShapeBundle {
-        //     shape: Shape::Circle {
-        //         center: Default::default(),
-        //         radius: 150.,
-        //         fill: Color32::TRANSPARENT,
-        //         stroke: Stroke::new(1., Color32::RED),
-        //     },
-        //     transform: Transform::from_xyz(0., 0., 1.),
-        //     ..Default::default()
-        // });
-        // .insert_children(0, &[camera])
-    ;
-}
-
 fn move_camera_with_player(
     mut q: QuerySet<(
         Query<&mut Transform, With<MainCamera>>,
@@ -311,20 +264,20 @@ fn ui(
 ) {
     let window = windows.get_primary().unwrap();
     let mut cursor_pos = window.cursor_position().unwrap_or_default();
-    let player = q_player.single().unwrap();
+    // let player = q_player.single()().unwrap_or(Transform::default());
 
     egui::Window::new("Cursor").show(ui_context.ctx(), |ui| {
         ui.label("Pos:");
         ui.add(egui::Slider::new(&mut cursor_pos.x, 0.0..=window.width()).text("x"));
         ui.add(egui::Slider::new(&mut cursor_pos.y, 0.0..=window.height()).text("y"));
-        ui.add(egui::Label::new(format!(
-            "player x {}",
-            player.translation.x
-        )));
-        ui.add(egui::Label::new(format!(
-            "player y {}",
-            player.translation.y
-        )));
+        // ui.add(egui::Label::new(format!(
+        //     "player x {}",
+        //     player.translation.x
+        // )));
+        // ui.add(egui::Label::new(format!(
+        //     "player y {}",
+        //     player.translation.y
+        // )));
     });
 }
 

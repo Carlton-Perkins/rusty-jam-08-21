@@ -1,16 +1,17 @@
 use bevy::prelude::*;
-use ldtk_rust::Project;
+use ldtk_rust::{EntityInstance, Project};
+use serde_json::Value;
 use std::collections::HashMap;
 
 pub struct MapPlugin;
 
-pub struct MapLocation(String);
-pub struct MapScale(f32);
+pub struct MapLocation(pub String);
+pub struct MapScale(pub f32);
 
 struct MapDoneLoading;
 
-struct Map {
-    ldtk_map: Project,
+pub struct Map {
+    pub ldtk_map: Project,
     current_level: usize,
     reload: bool,
 }
@@ -18,6 +19,11 @@ struct Map {
 struct MapAssets {
     sprite_sheets: HashMap<i32, Handle<TextureAtlas>>,
     entity_materials: HashMap<i32, Handle<ColorMaterial>>,
+}
+
+pub struct MapEntity {
+    pub name: String,
+    pub fields: HashMap<String, Option<Value>>,
 }
 
 struct MapLayerInfo {
@@ -125,7 +131,7 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
             grid_width: layer.c_wid as i32,
             grid_height: layer.c_hei as i32,
             grid_size: layer.grid_size as i32,
-            depth: (25 - layer_z as i32) * 2 as i32,
+            depth: (25 - layer_z as i32) * 2,
             px_width: layer.c_wid as f32 * (layer.grid_size as f32 * scale.0),
             px_height: layer.c_hei as f32 * (layer.grid_size as f32 * scale.0),
         };
@@ -134,6 +140,7 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
             "Tiles" => {
                 for tile in layer.grid_tiles.iter() {
                     // TODO flip controls
+                    // TODO bake the static layers
 
                     c.spawn().insert_bundle(SpriteSheetBundle {
                         transform: Transform {
@@ -153,6 +160,39 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
                         texture_atlas: assets.sprite_sheets.get(&tileset_uid).unwrap().clone(),
                         ..Default::default()
                     });
+                }
+            }
+            "Entities" => {
+                for entity in layer.entity_instances.iter() {
+                    let name = &entity.identifier;
+
+                    let mut fields = HashMap::new();
+                    // Construct hashmap from fields, worry about parsing later
+                    for field in &entity.field_instances {
+                        let field_name = field.identifier.clone();
+                        let field_value = field.value.clone();
+                        fields.insert(field_name, field_value);
+                    }
+
+                    c.spawn()
+                        .insert(MapEntity {
+                            name: name.to_string(),
+                            fields,
+                        })
+                        .insert(Transform {
+                            translation: convert_to_world(
+                                layer_info.px_width,
+                                layer_info.px_height,
+                                layer_info.grid_size,
+                                scale.0,
+                                entity.px[0] as i32,
+                                entity.px[1] as i32,
+                                layer_info.depth,
+                            ),
+                            rotation: Default::default(),
+                            scale: Default::default(),
+                        })
+                        .insert(GlobalTransform::default());
                 }
             }
             _ => {
@@ -178,8 +218,12 @@ fn convert_to_world(
     y: i32,
     z: i32,
 ) -> Vec3 {
-    let world_x = (x as f32 * scale) + (grid_size as f32 * scale / 2.) - (width / 2.);
-    let world_y = (y as f32 * scale) - (grid_size as f32 * scale / 2.) + (height / 2.);
+    let world_x = x as f32;
+    let world_y = -y as f32;
     let world_z = z as f32;
+    // info!(
+    //     "Spawning tile at {:?}",
+    //     Vec3::new(world_x, world_y, world_z)
+    // );
     Vec3::new(world_x, world_y, world_z)
 }

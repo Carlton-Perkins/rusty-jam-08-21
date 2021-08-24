@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 17,
+	"nextUid": 23,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -89,7 +89,7 @@
 		}
 	], "entities": [
 		{
-			"identifier": "Player_Start_Location",
+			"identifier": "Start_Location",
 			"uid": 3,
 			"tags": [],
 			"width": 64,
@@ -106,12 +106,53 @@
 			"tilesetId": 8,
 			"tileId": 0,
 			"tileRenderMode": "Stretch",
-			"maxCount": 1,
+			"maxCount": 0,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0.5,
 			"pivotY": 0.5,
-			"fieldDefs": []
+			"fieldDefs": [
+				{
+					"identifier": "Character",
+					"__type": "LocalEnum.Character",
+					"uid": 21,
+					"type": { "id": "F_Enum", "params": [20] },
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": null,
+					"textLanguageMode": null
+				},
+				{
+					"identifier": "Count",
+					"__type": "Int",
+					"uid": 22,
+					"type": "F_Int",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"min": 1,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": { "id": "V_Int", "params": [1] },
+					"textLanguageMode": null
+				}
+			]
 		},
 		{
 			"identifier": "Enemy_Start_Location",
@@ -197,7 +238,7 @@
 			"spacing": 0,
 			"padding": 0,
 			"tagsSourceEnumUid": 9,
-			"enumTags": [ { "enumValueId": "NoCollide", "tileIds": [1,6] }, { "enumValueId": "Collide", "tileIds": [0,4,5] }, { "enumValueId": "Nothing", "tileIds": [] } ],
+			"enumTags": [ { "enumValueId": "Air", "tileIds": [1,6] }, { "enumValueId": "Wall", "tileIds": [0] }, { "enumValueId": "Door", "tileIds": [4,5,6] }, { "enumValueId": "Nothing", "tileIds": [2,3,7,8,9,10,11,12,13,14,15] } ],
 			"customData": [
 				{ "tileId": 0, "data": "Wall" },
 				{ "tileId": 1, "data": "Floor" },
@@ -276,11 +317,15 @@
 			"savedSelections": [],
 			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "0a33000000000000" }
 		}
-	], "enums": [{ "identifier": "Collideable", "uid": 9, "values": [
-		{ "id": "NoCollide", "tileId": null, "color": 0, "__tileSrcRect": null },
-		{ "id": "Collide", "tileId": null, "color": 0, "__tileSrcRect": null },
-		{ "id": "Nothing", "tileId": null, "color": 0, "__tileSrcRect": null }
-	], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null }], "externalEnums": [], "levelFields": [] },
+	], "enums": [
+		{ "identifier": "Collideable", "uid": 9, "values": [
+			{ "id": "Air", "tileId": null, "color": 0, "__tileSrcRect": null },
+			{ "id": "Wall", "tileId": null, "color": 0, "__tileSrcRect": null },
+			{ "id": "Door", "tileId": null, "color": 0, "__tileSrcRect": null },
+			{ "id": "Nothing", "tileId": null, "color": 0, "__tileSrcRect": null }
+		], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null },
+		{ "identifier": "Character", "uid": 20, "values": [ { "id": "Player", "tileId": null, "color": 0, "__tileSrcRect": null }, { "id": "Enemy", "tileId": null, "color": 0, "__tileSrcRect": null } ], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null }
+	], "externalEnums": [], "levelFields": [] },
 	"levels": [
 		{
 			"identifier": "Level_0",
@@ -454,7 +499,7 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Player_Start_Location",
+							"__identifier": "Start_Location",
 							"__grid": [8,13],
 							"__pivot": [0.5,0.5],
 							"__tile": { "tilesetUid": 8, "srcRect": [0,0,64,64] },
@@ -462,58 +507,94 @@
 							"height": 64,
 							"defUid": 3,
 							"px": [544,864],
-							"fieldInstances": []
-						},
-						{
-							"__identifier": "Enemy_Start_Location",
-							"__grid": [2,6],
-							"__pivot": [0,0],
-							"__tile": { "tilesetUid": 12, "srcRect": [0,0,64,64] },
-							"width": 64,
-							"height": 64,
-							"defUid": 11,
-							"px": [128,384],
-							"fieldInstances": []
-						},
-						{
-							"__identifier": "Enemy_Start_Location",
-							"__grid": [13,5],
-							"__pivot": [0,0],
-							"__tile": { "tilesetUid": 12, "srcRect": [0,0,64,64] },
-							"width": 64,
-							"height": 64,
-							"defUid": 11,
-							"px": [832,320],
-							"fieldInstances": []
+							"fieldInstances": [
+								{
+									"__identifier": "Character",
+									"__value": "Player",
+									"__type": "LocalEnum.Character",
+									"defUid": 21,
+									"realEditorValues": [{
+										"id": "V_String",
+										"params": ["Player"]
+									}]
+								},
+								{ "__identifier": "Count", "__value": 1, "__type": "Int", "defUid": 22, "realEditorValues": [] }
+							]
 						},
 						{
 							"__identifier": "Patrol_Path",
-							"__grid": [2,6],
+							"__grid": [2,7],
 							"__pivot": [0.5,0.5],
 							"__tile": null,
 							"width": 16,
 							"height": 16,
 							"defUid": 14,
-							"px": [160,416],
+							"px": [160,480],
 							"fieldInstances": [{
 								"__identifier": "Path",
-								"__value": [ { "cx": 2, "cy": 9 }, { "cx": 4, "cy": 9 }, { "cx": 4, "cy": 6 }, { "cx": 2, "cy": 6 } ],
+								"__value": [ { "cx": 2, "cy": 10 }, { "cx": 4, "cy": 10 }, { "cx": 4, "cy": 7 }, { "cx": 2, "cy": 7 } ],
 								"__type": "Array<Point>",
 								"defUid": 16,
 								"realEditorValues": [ {
 									"id": "V_String",
-									"params": ["2,9"]
+									"params": ["2,10"]
 								}, {
 									"id": "V_String",
-									"params": ["4,9"]
+									"params": ["4,10"]
 								}, {
 									"id": "V_String",
-									"params": ["4,6"]
+									"params": ["4,7"]
 								}, {
 									"id": "V_String",
-									"params": ["2,6"]
+									"params": ["2,7"]
 								} ]
 							}]
+						},
+						{
+							"__identifier": "Start_Location",
+							"__grid": [2,5],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 8, "srcRect": [0,0,64,64] },
+							"width": 64,
+							"height": 64,
+							"defUid": 3,
+							"px": [160,352],
+							"fieldInstances": [
+								{
+									"__identifier": "Character",
+									"__value": "Enemy",
+									"__type": "LocalEnum.Character",
+									"defUid": 21,
+									"realEditorValues": [{
+										"id": "V_String",
+										"params": ["Enemy"]
+									}]
+								},
+								{ "__identifier": "Count", "__value": 1, "__type": "Int", "defUid": 22, "realEditorValues": [] }
+							]
+						},
+						{
+							"__identifier": "Start_Location",
+							"__grid": [13,5],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 8, "srcRect": [0,0,64,64] },
+							"width": 64,
+							"height": 64,
+							"defUid": 3,
+							"px": [864,352],
+							"fieldInstances": [
+								{
+									"__identifier": "Character",
+									"__value": "Enemy",
+									"__type": "LocalEnum.Character",
+									"defUid": 21,
+									"realEditorValues": [{
+										"id": "V_String",
+										"params": ["Enemy"]
+									}]
+								},
+								{ "__identifier": "Count", "__value": 1, "__type": "Int", "defUid": 22, "realEditorValues": [] }
+							]
 						}
 					]
 				},
