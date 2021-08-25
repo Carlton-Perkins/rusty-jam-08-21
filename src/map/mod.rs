@@ -1,5 +1,11 @@
+mod map_colliders;
+
+use crate::map::map_colliders::generate_colliders_for_map_tiles;
+use crate::tags::{world_type_from_str, WorldType};
 use bevy::prelude::*;
+use ldtk_rust::RenderMode::Tile;
 use ldtk_rust::{EntityInstance, Project};
+use serde::Deserialize;
 use serde_json::Value;
 use std::collections::HashMap;
 
@@ -10,6 +16,12 @@ pub struct MapScale(pub f32);
 
 struct MapDoneLoading;
 
+pub struct MapTile {
+    size: Vec2,
+    depth: f32,
+    world_type: WorldType,
+}
+
 pub struct Map {
     pub ldtk_map: Project,
     current_level: usize,
@@ -19,6 +31,8 @@ pub struct Map {
 struct MapAssets {
     sprite_sheets: HashMap<i32, Handle<TextureAtlas>>,
     entity_materials: HashMap<i32, Handle<ColorMaterial>>,
+    // tilemap_enum_defs: HashMap<i32, HashMap<i64, Vec<WorldType>>>,
+    tilemap_custom_data: HashMap<i32, HashMap<i64, String>>,
 }
 
 pub struct MapEntity {
@@ -38,8 +52,23 @@ struct MapLayerInfo {
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_startup_system(init_map.system())
-            .add_system(update_map.system());
+            .add_system(update_map.system())
+            .add_system(generate_colliders_for_map_tiles.system());
     }
+}
+
+#[derive(Deserialize, Debug)]
+struct MapEnumMapping {
+    #[serde(rename(deserialize = "enumValueId"))]
+    enum_value_id: String,
+
+    #[serde(rename(deserialize = "tileIds"))]
+    tile_ids: Vec<i64>,
+}
+
+#[derive(Deserialize, Debug)]
+struct MapEnumTileIds {
+    tile_ids: Vec<i32>,
 }
 
 fn init_map(
@@ -59,6 +88,7 @@ fn init_map(
     let mut map_assets = MapAssets {
         sprite_sheets: HashMap::new(),
         entity_materials: HashMap::new(),
+        tilemap_custom_data: HashMap::new(),
     };
 
     // Load all tilesets
@@ -75,6 +105,26 @@ fn init_map(
             tileset.c_hei as usize,
         );
         let texture_atlas_handle = textures_atlases.add(atlas);
+
+        // Convert enum data to []id -> enum[] instead of []enum -> []id
+
+        let mut data_map = HashMap::new();
+        for enum_map in tileset.custom_data.iter() {
+            let enum_label = enum_map.get("tileId").unwrap().as_ref().unwrap();
+            let enum_value = enum_map.get("data").unwrap().as_ref().unwrap();
+
+            let tile_id = match enum_label {
+                Value::Number(s) => s.as_i64().unwrap(),
+                v => panic!("Can not parse {}", v),
+            };
+            let value = match enum_value {
+                Value::String(s) => s,
+                v => panic!("Can not parse {}", v),
+            };
+
+            data_map.insert(tile_id, value.clone());
+        }
+        map_assets.tilemap_custom_data.insert(id as i32, data_map);
 
         info!("Loading tileset {} from {}...", name, sprite_path);
         map_assets
@@ -142,24 +192,38 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
                     // TODO flip controls
                     // TODO bake the static layers
 
-                    c.spawn().insert_bundle(SpriteSheetBundle {
-                        transform: Transform {
-                            translation: convert_to_world(
-                                layer_info.px_width,
-                                layer_info.px_height,
-                                layer_info.grid_size,
-                                scale.0,
-                                tile.px[0] as i32,
-                                tile.px[1] as i32,
-                                layer_info.depth,
-                            ),
-                            rotation: Default::default(),
-                            scale: Vec3::splat(scale.0),
-                        },
-                        sprite: TextureAtlasSprite::new(tile.t as u32),
-                        texture_atlas: assets.sprite_sheets.get(&tileset_uid).unwrap().clone(),
-                        ..Default::default()
-                    });
+                    c.spawn()
+                        .insert_bundle(SpriteSheetBundle {
+                            transform: Transform {
+                                translation: convert_to_world(
+                                    layer_info.px_width,
+                                    layer_info.px_height,
+                                    layer_info.grid_size,
+                                    scale.0,
+                                    tile.px[0] as i32,
+                                    tile.px[1] as i32,
+                                    layer_info.depth,
+                                ),
+                                rotation: Default::default(),
+                                scale: Vec3::splat(scale.0),
+                            },
+                            sprite: TextureAtlasSprite::new(tile.t as u32),
+                            texture_atlas: assets.sprite_sheets.get(&tileset_uid).unwrap().clone(),
+                            ..Default::default()
+                        })
+                        .insert(MapTile {
+                            size: Vec2::new(layer_info.px_width, layer_info.px_height) * scale.0,
+                            depth: layer_info.depth as f32,
+                            world_type: world_type_from_str(
+                                assets
+                                    .tilemap_custom_data
+                                    .get(&tileset_uid)
+                                    .unwrap_or(&HashMap::new())
+                                    .get(&tile.t)
+                                    .unwrap_or(&String::new()),
+                            )
+                            .unwrap_or(WorldType::Air),
+                        });
                 }
             }
             "Entities" => {
@@ -174,25 +238,46 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
                         fields.insert(field_name, field_value);
                     }
 
-                    c.spawn()
-                        .insert(MapEntity {
-                            name: name.to_string(),
-                            fields,
-                        })
-                        .insert(Transform {
-                            translation: convert_to_world(
-                                layer_info.px_width,
-                                layer_info.px_height,
-                                layer_info.grid_size,
-                                scale.0,
-                                entity.px[0] as i32,
-                                entity.px[1] as i32,
-                                layer_info.depth,
-                            ),
-                            rotation: Default::default(),
-                            scale: Default::default(),
-                        })
-                        .insert(GlobalTransform::default());
+                    let transform = Transform {
+                        translation: convert_to_world(
+                            layer_info.px_width,
+                            layer_info.px_height,
+                            layer_info.grid_size,
+                            scale.0,
+                            entity.px[0] as i32,
+                            entity.px[1] as i32,
+                            layer_info.depth,
+                        ),
+                        rotation: Default::default(),
+                        scale: Default::default(),
+                    };
+
+                    if let Some(tile) = &entity.tile {
+                        c.spawn()
+                            .insert_bundle(SpriteSheetBundle {
+                                transform: transform,
+                                sprite: TextureAtlasSprite::new(tile.tileset_uid as u32),
+                                texture_atlas: assets
+                                    .sprite_sheets
+                                    .get(&(tile.tileset_uid as i32))
+                                    .unwrap()
+                                    .clone(),
+                                ..Default::default()
+                            })
+                            .insert(MapEntity {
+                                name: name.to_string(),
+                                fields,
+                            })
+                            .insert(GlobalTransform::default());
+                    } else {
+                        c.spawn()
+                            .insert(MapEntity {
+                                name: name.to_string(),
+                                fields,
+                            })
+                            .insert(transform)
+                            .insert(GlobalTransform::default());
+                    }
                 }
             }
             _ => {

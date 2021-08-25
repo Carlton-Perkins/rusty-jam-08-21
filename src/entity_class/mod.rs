@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 
+mod door;
 mod enemy;
 mod indexer;
 mod player;

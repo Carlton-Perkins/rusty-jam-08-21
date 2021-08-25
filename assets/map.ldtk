@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 23,
+	"nextUid": 25,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -51,7 +51,26 @@
 		},
 		{
 			"__type": "Entities",
-			"identifier": "Starts",
+			"identifier": "World_Entities",
+			"type": "Entities",
+			"uid": 24,
+			"gridSize": 64,
+			"displayOpacity": 1,
+			"pxOffsetX": 0,
+			"pxOffsetY": 0,
+			"requiredTags": [],
+			"excludedTags": [],
+			"intGridValues": [{ "value": 1, "identifier": null, "color": "#000000" }],
+			"autoTilesetDefUid": null,
+			"autoRuleGroups": [],
+			"autoSourceLayerDefUid": null,
+			"tilesetDefUid": null,
+			"tilePivotX": 0,
+			"tilePivotY": 0
+		},
+		{
+			"__type": "Entities",
+			"identifier": "Entities",
 			"type": "Entities",
 			"uid": 4,
 			"gridSize": 64,
@@ -199,6 +218,31 @@
 					"textLanguageMode": null
 				}
 			]
+		},
+		{
+			"identifier": "Door",
+			"uid": 23,
+			"tags": [],
+			"width": 64,
+			"height": 64,
+			"resizableX": false,
+			"resizableY": false,
+			"keepAspectRatio": false,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#94D9B3",
+			"renderMode": "Tile",
+			"showName": false,
+			"tilesetId": 2,
+			"tileId": 5,
+			"tileRenderMode": "FitInside",
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0,
+			"pivotY": 0,
+			"fieldDefs": []
 		}
 	], "tilesets": [
 		{
@@ -360,8 +404,6 @@
 						{ "px": [896,0], "src": [0,0], "f": 0, "t": 0, "d": [14] },
 						{ "px": [960,0], "src": [0,0], "f": 0, "t": 0, "d": [15] },
 						{ "px": [0,64], "src": [0,0], "f": 0, "t": 0, "d": [16] },
-						{ "px": [384,64], "src": [0,64], "f": 0, "t": 4, "d": [22] },
-						{ "px": [576,64], "src": [0,64], "f": 0, "t": 4, "d": [25] },
 						{ "px": [960,64], "src": [0,0], "f": 0, "t": 0, "d": [31] },
 						{ "px": [0,128], "src": [0,0], "f": 0, "t": 0, "d": [32] },
 						{ "px": [128,128], "src": [0,0], "f": 0, "t": 0, "d": [34] },
@@ -450,7 +492,66 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Starts",
+					"__identifier": "World_Entities",
+					"__type": "Entities",
+					"__cWid": 16,
+					"__cHei": 16,
+					"__gridSize": 64,
+					"__opacity": 1,
+					"__pxTotalOffsetX": 0,
+					"__pxTotalOffsetY": 0,
+					"__tilesetDefUid": null,
+					"__tilesetRelPath": null,
+					"levelId": 0,
+					"layerDefUid": 24,
+					"pxOffsetX": 0,
+					"pxOffsetY": 0,
+					"visible": true,
+					"optionalRules": [],
+					"intGrid": [],
+					"intGridCsv": [],
+					"autoLayerTiles": [],
+					"seed": 7152788,
+					"overrideTilesetUid": null,
+					"gridTiles": [],
+					"entityInstances": [
+						{
+							"__identifier": "Door",
+							"__grid": [8,10],
+							"__pivot": [0,0],
+							"__tile": { "tilesetUid": 2, "srcRect": [64,64,64,64] },
+							"width": 64,
+							"height": 64,
+							"defUid": 23,
+							"px": [512,640],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Door",
+							"__grid": [6,1],
+							"__pivot": [0,0],
+							"__tile": { "tilesetUid": 2, "srcRect": [64,64,64,64] },
+							"width": 64,
+							"height": 64,
+							"defUid": 23,
+							"px": [384,64],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Door",
+							"__grid": [9,1],
+							"__pivot": [0,0],
+							"__tile": { "tilesetUid": 2, "srcRect": [64,64,64,64] },
+							"width": 64,
+							"height": 64,
+							"defUid": 23,
+							"px": [576,64],
+							"fieldInstances": []
+						}
+					]
+				},
+				{
+					"__identifier": "Entities",
 					"__type": "Entities",
 					"__cWid": 16,
 					"__cHei": 16,
