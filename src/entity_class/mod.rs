@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
+mod enemy;
 mod indexer;
+mod player;
 mod start_location;
 
 pub struct EntityClasses;
