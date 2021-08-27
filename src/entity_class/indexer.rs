@@ -7,6 +7,7 @@ use bevy::prelude::*;
 use serde_json::Value;
 use std::collections::HashMap;
 use thiserror::Error;
+use crate::entity_class::patrol_path::PatrolPath;
 
 #[derive(Error, Debug)]
 pub enum IndexingError {
@@ -52,6 +53,7 @@ pub fn index_entities(
         c = match entity.name.as_str() {
             START_LOCATION_ID => insert(eid, name, StartLocation::parse(fields), c),
             DOOR_ID => insert(eid, name, Door::parse(fields), c),
+            PATROL_PATH_ID => insert(eid, name, PatrolPath::parse(fields), c),
             _ => {
                 warn!("Unknown entity type {}", entity.name);
 

@@ -16,7 +16,7 @@ bevy-inspector-egui = "0.6.1"
 #glam = "0.13.1"
 heron = { version = "0.11.0", features = ["2d"]}
 #rayon = "1.5.1"
-#rand = "0.8.4"
+rand = "0.8.4"
 ldtk_rust = "0.5.2"
 serde = "1.0.129"
 serde_json = "1.0.66"

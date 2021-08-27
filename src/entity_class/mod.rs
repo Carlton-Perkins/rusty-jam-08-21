@@ -2,10 +2,11 @@ use crate::GameStage;
 use bevy::prelude::*;
 
 mod door;
-mod enemy;
+pub(crate) mod enemy;
 mod indexer;
 mod player;
 mod start_location;
+mod patrol_path;
 
 pub use player::Player;
 
