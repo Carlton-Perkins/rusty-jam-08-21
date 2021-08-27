@@ -41,7 +41,6 @@ impl ParseFields for PatrolPath {
             _ => Err(IndexingError::InvalidParse)?,
         };
 
-        info!("{:?}", path_arr);
         Ok(PatrolPath {})
     }
 }

@@ -2,6 +2,7 @@ use crate::GameStage;
 use bevy::core::FixedTimestep;
 use bevy::prelude::*;
 
+mod creature;
 mod door;
 mod enemy;
 mod indexer;
@@ -34,6 +35,7 @@ impl Plugin for EntityClasses {
                             .label(enemy::EnemyFunctions::Move)
                             .after(enemy::EnemyFunctions::ChangeState),
                     ),
-            );
+            )
+            .add_system(movement::update_last_direction.system());
     }
 }

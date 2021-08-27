@@ -1,4 +1,5 @@
-use crate::tags::MainCamera;
+use crate::entity_class::creature::Creature;
+use crate::tags::{MainCamera, Player};
 use crate::GameLayer;
 use bevy::prelude::*;
 use heron::{CollisionLayers, CollisionShape, RigidBody, RotationConstraints, Velocity};
@@ -10,8 +11,6 @@ pub enum MovementDirection {
     Left,
     Right,
 }
-
-pub struct Player;
 
 pub struct LastMovementDirection(pub MovementDirection);
 
@@ -38,6 +37,7 @@ pub fn spawn_player(
             ..Default::default()
         })
         .insert(Player)
+        .insert(Creature)
         .insert(Velocity::from_linear(Vec3::default()))
         .insert(RigidBody::Dynamic)
         .insert(RotationConstraints::lock())
@@ -72,15 +72,12 @@ pub fn spawn_player(
     ;
 }
 
-pub fn player_movement(
-    input: Res<Input<KeyCode>>,
-    mut q: Query<(&mut Velocity, &mut LastMovementDirection), With<Player>>,
-) {
+pub fn player_movement(input: Res<Input<KeyCode>>, mut q: Query<&mut Velocity, With<Player>>) {
     let move_speed = 10.;
     let min_speed = 0.01;
     let max_speed = 100.;
     let friction = 0.95;
-    for (mut real_vel, mut dir) in q.iter_mut() {
+    for mut real_vel in q.iter_mut() {
         let mut vel = real_vel.clone();
 
         // Adjust current velocity
@@ -121,31 +118,6 @@ pub fn player_movement(
         //         real_vel.linear, vel.linear
         //     );
         // }
-
-        // Update last direction
-        let normalized = vel.linear.normalize();
-        let absed = normalized.abs();
-        let norm_x = absed.x;
-        let norm_y = absed.y;
-
-        // Find primary direction
-        let new_dir = match (norm_x, norm_y) {
-            (0., 0.) => MovementDirection::Down,
-            (x, y) if x > y => {
-                if normalized.x > 0. {
-                    MovementDirection::Right
-                } else {
-                    MovementDirection::Left
-                }
-            }
-            (x, y) if y > x => MovementDirection::Down,
-            _ => MovementDirection::Down,
-        };
-
-        if dir.0 != new_dir {
-            info!("{:?}", new_dir);
-            dir.0 = new_dir
-        }
     }
 }
 

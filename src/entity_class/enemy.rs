@@ -1,9 +1,13 @@
 use crate::entity_class::patrol_path::PatrolPath;
 
+use crate::entity_class::creature::Creature;
+use crate::entity_class::player::{LastMovementDirection, MovementDirection};
 use crate::GameLayer;
 use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use heron::{CollisionLayers, CollisionShape, RigidBody, RotationConstraints, Velocity};
+use rand::distributions::Standard;
+use rand::prelude::Distribution;
 use rand::Rng;
 
 #[derive(Inspectable, Debug)]
@@ -32,20 +36,35 @@ pub enum EnemyState {
     Idle,
     Patrol,
     Attack,
+    Wander,
+}
+
+impl Distribution<EnemyState> for Standard {
+    fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> EnemyState {
+        use EnemyState::*;
+        match rng.gen_range(0..4) {
+            0 => Idle,
+            1 => Patrol,
+            _ => Wander,
+        }
+    }
 }
 
 pub fn spawn_enemy(
     mut c: &mut Commands,
     assets: &Res<AssetServer>,
-    mut materials: &mut ResMut<Assets<ColorMaterial>>,
+    mut texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     transform: &Transform,
 ) {
-    let enemy_sprite = assets.load("enemy.sprite.png");
+    let enemy_sprite = assets.load("enemy.spritemap.png");
+    let texture_atlas = TextureAtlas::from_grid(enemy_sprite, Vec2::new(64., 64.), 4, 1);
+    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+
     let start_loc = Transform::from_xyz(transform.translation.x, transform.translation.y, 100.);
 
     c.spawn()
-        .insert_bundle(SpriteBundle {
-            material: materials.add(enemy_sprite.into()),
+        .insert_bundle(SpriteSheetBundle {
+            texture_atlas: texture_atlas_handle,
             transform: start_loc,
             ..Default::default()
         })
@@ -55,6 +74,7 @@ pub fn spawn_enemy(
             start_loc,
             move_mod: -1,
         })
+        .insert(Creature)
         .insert(Velocity::from_linear(Vec3::default()))
         .insert(RigidBody::Dynamic)
         .insert(RotationConstraints::lock())
@@ -62,6 +82,7 @@ pub fn spawn_enemy(
             half_extends: Vec3::new(20., 28., 0.),
             border_radius: None,
         })
+        .insert(LastMovementDirection(MovementDirection::Down))
         .insert(
             CollisionLayers::none()
                 .with_group(GameLayer::Enemy)
@@ -80,10 +101,16 @@ pub fn rand_update_enemy_state(mut enemies: Query<&mut Enemy>) {
             EnemyState::Idle => {
                 let chance_to_change = rng.gen_range(0..33);
                 if chance_to_change == 0 {
-                    enemy.state = EnemyState::Patrol;
+                    enemy.state = rng.gen();
                 }
             }
             EnemyState::Patrol => {
+                let chance_to_change = rng.gen_range(0..66);
+                if chance_to_change == 0 {
+                    enemy.state = EnemyState::Idle;
+                }
+            }
+            EnemyState::Wander => {
                 let chance_to_change = rng.gen_range(0..66);
                 if chance_to_change == 0 {
                     enemy.state = EnemyState::Idle;
@@ -95,6 +122,8 @@ pub fn rand_update_enemy_state(mut enemies: Query<&mut Enemy>) {
 }
 
 pub fn move_down(mut q: Query<(&mut Velocity, &mut Enemy, &Transform), With<Enemy>>) {
+    let mut rng = rand::thread_rng();
+
     for (mut real_vel, mut enemy, transform) in q.iter_mut() {
         let mut vel = real_vel.clone();
         let move_speed = 10.;
@@ -111,6 +140,13 @@ pub fn move_down(mut q: Query<(&mut Velocity, &mut Enemy, &Transform), With<Enem
                 }
 
                 vel.linear.y += move_speed * enemy.move_mod as f32;
+            }
+            EnemyState::Wander => {
+                vel.linear += Vec3::new(
+                    rng.gen_range(-move_speed..move_speed),
+                    rng.gen_range(-move_speed..move_speed),
+                    0.,
+                )
             }
             _ => {}
         };

@@ -58,7 +58,6 @@ pub fn spawn_from_spawn_location(
     mut c: Commands,
     mut q: Query<(&mut StartLocation, &Transform)>,
     assets: Res<AssetServer>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     for (mut start, location) in q.iter_mut() {
@@ -67,7 +66,7 @@ pub fn spawn_from_spawn_location(
                 StartEntity::Player => {
                     spawn_player(&mut c, &assets, &mut texture_atlases, location)
                 }
-                StartEntity::Enemy => spawn_enemy(&mut c, &assets, &mut materials, location),
+                StartEntity::Enemy => spawn_enemy(&mut c, &assets, &mut texture_atlases, location),
             }
             start.spawned += 1;
         }
