@@ -3,8 +3,10 @@ mod map;
 mod tags;
 
 use crate::entity_class::EntityClasses;
-use crate::map::{MapLocation, MapPlugin, MapScale};
-use crate::tags::Player;
+use crate::entity_class::Player;
+use crate::map::MapLocation;
+use crate::map::MapPlugin;
+use crate::map::MapScale;
 use bevy::app::AppExit;
 use bevy::asset::AssetPath;
 use bevy::core::FixedTimestep;
@@ -57,12 +59,12 @@ fn main() {
         // .add_startup_system(setup_level.system())
         // .add_startup_system(spawn_player.system())
         // .add_system(update_map_collisions.system())
-        .add_stage(
-            GameStage,
-            SystemStage::parallel()
-                .with_run_criteria(FixedTimestep::step(0.015))
-                .with_system(player_movement.system()),
-        )
+        // .add_stage(
+        //     GameStage,
+        //     SystemStage::parallel()
+        //         .with_run_criteria(FixedTimestep::step(0.015))
+        //         .with_system(player_movement.system()),
+        // )
         // .add_system(cast_projectile.system())
         .add_system(quit_system.system())
         .add_system(ui.system())
@@ -630,55 +632,6 @@ fn ui(
 //         }
 //     }
 // }
-
-fn player_movement(input: Res<Input<KeyCode>>, mut q: Query<&mut Velocity, With<Player>>) {
-    for mut real_vel in q.iter_mut() {
-        let mut vel = real_vel.clone();
-        let move_speed = 10.;
-        let min_speed = 0.01;
-        let max_speed = 100.;
-        let friction = 0.95;
-
-        // Adjust current velocity
-        if input.pressed(KeyCode::W) {
-            vel.linear.y += move_speed
-        };
-        if input.pressed(KeyCode::A) {
-            vel.linear.x -= move_speed
-        };
-        if input.pressed(KeyCode::S) {
-            vel.linear.y -= move_speed
-        };
-        if input.pressed(KeyCode::D) {
-            vel.linear.x += move_speed
-        };
-
-        // Clamp velocity to MAX
-        vel.linear
-            .clamp(Vec3::splat(-max_speed), Vec3::splat(max_speed));
-
-        // Apply velocity degradation due to friction
-        vel.linear *= friction;
-
-        // Zero out velocities lower then 0.00001
-
-        if vel.linear.x.abs() <= min_speed {
-            vel.linear.x = 0.
-        }
-        if vel.linear.y.abs() <= min_speed {
-            vel.linear.y = 0.
-        }
-
-        // Only update if different
-        // if real_vel.linear.abs_diff_eq(vel.linear, min_speed) {
-        real_vel.linear = vel.linear;
-        //     info!(
-        //         "Updating player velocity From {:?} to {:?}",
-        //         real_vel.linear, vel.linear
-        //     );
-        // }
-    }
-}
 
 // fn delete_debug_lines(mut c: Commands, q: Query<Entity, With<DebugLine>>) {
 //     for e in q.iter() {

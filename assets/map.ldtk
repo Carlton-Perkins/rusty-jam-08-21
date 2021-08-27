@@ -671,6 +671,35 @@
 								},
 								{ "__identifier": "Count", "__value": 1, "__type": "Int", "defUid": 22, "realEditorValues": [] }
 							]
+						},
+						{
+							"__identifier": "Patrol_Path",
+							"__grid": [11,14],
+							"__pivot": [0.5,0.5],
+							"__tile": null,
+							"width": 16,
+							"height": 16,
+							"defUid": 14,
+							"px": [736,928],
+							"fieldInstances": [{
+								"__identifier": "Path",
+								"__value": [ { "cx": 14, "cy": 14 }, { "cx": 14, "cy": 1 }, { "cx": 11, "cy": 1 }, { "cx": 11, "cy": 14 } ],
+								"__type": "Array<Point>",
+								"defUid": 16,
+								"realEditorValues": [ {
+									"id": "V_String",
+									"params": ["14,14"]
+								}, {
+									"id": "V_String",
+									"params": ["14,1"]
+								}, {
+									"id": "V_String",
+									"params": ["11,1"]
+								}, {
+									"id": "V_String",
+									"params": ["11,14"]
+								} ]
+							}]
 						}
 					]
 				},

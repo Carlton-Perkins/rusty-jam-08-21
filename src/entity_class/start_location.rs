@@ -1,7 +1,7 @@
 use crate::entity_class::enemy::spawn_enemy;
 use crate::entity_class::indexer::{IndexingError, ParseFields};
 use crate::entity_class::player::spawn_player;
-use crate::tags::Player;
+use crate::entity_class::Player;
 use crate::{GameLayer, MainCamera};
 use anyhow::anyhow;
 use bevy::prelude::*;
@@ -59,11 +59,14 @@ pub fn spawn_from_spawn_location(
     mut q: Query<(&mut StartLocation, &Transform)>,
     assets: Res<AssetServer>,
     mut materials: ResMut<Assets<ColorMaterial>>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     for (mut start, location) in q.iter_mut() {
         if start.spawned < start.count {
             match start.character {
-                StartEntity::Player => spawn_player(&mut c, &assets, &mut materials, location),
+                StartEntity::Player => {
+                    spawn_player(&mut c, &assets, &mut texture_atlases, location)
+                }
                 StartEntity::Enemy => spawn_enemy(&mut c, &assets, &mut materials, location),
             }
             start.spawned += 1;

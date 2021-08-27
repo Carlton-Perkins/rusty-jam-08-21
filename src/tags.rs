@@ -1,5 +1,3 @@
-pub struct Player;
-
 #[derive(Clone, Eq, PartialEq)]
 pub enum WorldType {
     Air,
