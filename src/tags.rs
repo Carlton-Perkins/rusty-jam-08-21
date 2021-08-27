@@ -1,6 +1,6 @@
 use crate::entity_class::enemy::EnemyState;
-use bevy_inspector_egui::Inspectable;
 use bevy::prelude::Transform;
+use bevy_inspector_egui::Inspectable;
 
 pub struct Player;
 

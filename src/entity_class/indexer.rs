@@ -1,4 +1,5 @@
 use crate::entity_class::door::{Door, DOOR_ID};
+use crate::entity_class::patrol_path::PatrolPath;
 use crate::entity_class::start_location::{StartLocation, START_LOCATION_ID};
 use crate::map::MapEntity;
 use anyhow::{anyhow, Error};
@@ -7,7 +8,6 @@ use bevy::prelude::*;
 use serde_json::Value;
 use std::collections::HashMap;
 use thiserror::Error;
-use crate::entity_class::patrol_path::PatrolPath;
 
 #[derive(Error, Debug)]
 pub enum IndexingError {

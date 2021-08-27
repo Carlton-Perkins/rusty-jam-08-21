@@ -4,9 +4,9 @@ use bevy::prelude::*;
 mod door;
 pub(crate) mod enemy;
 mod indexer;
+mod patrol_path;
 mod player;
 mod start_location;
-mod patrol_path;
 
 pub use player::Player;
 

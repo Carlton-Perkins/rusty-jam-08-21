@@ -1,10 +1,10 @@
-use bevy::prelude::*;
-use crate::{GameLayer};
-use crate::tags::Enemy;
-use heron::{Velocity, RigidBody, CollisionShape, RotationConstraints, CollisionLayers};
-use rand::Rng;
-use bevy_inspector_egui::Inspectable;
 use crate::entity_class::patrol_path::PatrolPath;
+use crate::tags::Enemy;
+use crate::GameLayer;
+use bevy::prelude::*;
+use bevy_inspector_egui::Inspectable;
+use heron::{CollisionLayers, CollisionShape, RigidBody, RotationConstraints, Velocity};
+use rand::Rng;
 
 #[derive(SystemLabel, Debug, Hash, PartialEq, Eq, Clone)]
 pub enum EnemyFunctions {
@@ -16,7 +16,7 @@ pub enum EnemyFunctions {
 pub enum EnemyState {
     Idle,
     Patrol,
-    Attack
+    Attack,
 }
 
 pub fn spawn_enemy(
@@ -38,7 +38,7 @@ pub fn spawn_enemy(
         .insert(Enemy {
             state: EnemyState::Idle,
             start_loc,
-            move_mod: -1
+            move_mod: -1,
         })
         .insert(Velocity::from_linear(Vec3::default()))
         .insert(RigidBody::Dynamic)
@@ -57,9 +57,7 @@ pub fn spawn_enemy(
 // rand_update_enemy_state iterates over all enemies on the board and
 // randomly determines if the enemy state should change from {Idle} to {Patrol}
 // and vice versa
-pub fn rand_update_enemy_state(
-    mut enemies: Query<&mut Enemy>,
-) {
+pub fn rand_update_enemy_state(mut enemies: Query<&mut Enemy>) {
     let mut rng = rand::thread_rng();
 
     for mut enemy in enemies.iter_mut() {
@@ -81,9 +79,7 @@ pub fn rand_update_enemy_state(
     }
 }
 
-pub fn move_down(
-    mut q: Query<(&mut Velocity, &mut Enemy, &Transform), With<Enemy>>
-) {
+pub fn move_down(mut q: Query<(&mut Velocity, &mut Enemy, &Transform), With<Enemy>>) {
     for (mut real_vel, mut enemy, transform) in q.iter_mut() {
         let mut vel = real_vel.clone();
         let move_speed = 10.;
@@ -93,14 +89,13 @@ pub fn move_down(
 
         match &enemy.state {
             EnemyState::Patrol => {
-                if transform.translation.y < enemy.start_loc.translation.y -200. {
+                if transform.translation.y < enemy.start_loc.translation.y - 200. {
                     enemy.move_mod = 1
                 } else if transform.translation.y >= enemy.start_loc.translation.y {
                     enemy.move_mod = -1
                 }
 
                 vel.linear.y += move_speed * enemy.move_mod as f32;
-
             }
             _ => {}
         };
@@ -127,10 +122,6 @@ pub fn move_down(
     }
 }
 
-pub fn find_nearest_patrol_path(
-    mut q: Query<(&mut PatrolPath, &Transform)>,
-) {
-    for (mut path, location) in q.iter_mut() {
-
-    }
+pub fn find_nearest_patrol_path(mut q: Query<(&mut PatrolPath, &Transform)>) {
+    for (mut path, location) in q.iter_mut() {}
 }

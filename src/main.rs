@@ -2,20 +2,20 @@ mod entity_class;
 mod map;
 mod tags;
 
+use crate::entity_class::enemy::{move_down, rand_update_enemy_state, EnemyFunctions};
 use crate::entity_class::EntityClasses;
-use crate::map::{MapLocation, MapPlugin, MapScale};
 use crate::entity_class::Player;
+use crate::map::{MapLocation, MapPlugin, MapScale};
 use bevy::app::AppExit;
 use bevy::asset::AssetPath;
 use bevy::core::FixedTimestep;
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContext, EguiPlugin};
-use bevy_inspector_egui::{WorldInspectorPlugin, InspectorPlugin};
+use bevy_inspector_egui::{InspectorPlugin, WorldInspectorPlugin};
 use heron::prelude::*;
 use ldtk_rust::Project;
 use std::collections::HashMap;
 use std::path::Path;
-use crate::entity_class::enemy::{rand_update_enemy_state, move_down, EnemyFunctions};
 
 // use bevy_retrograde::prelude::*;
 
@@ -68,14 +68,16 @@ fn main() {
             SystemSet::new()
                 .with_run_criteria(FixedTimestep::step(0.05))
                 .with_system(
-                    rand_update_enemy_state.system()
-                        .label(EnemyFunctions::ChangeState)
+                    rand_update_enemy_state
+                        .system()
+                        .label(EnemyFunctions::ChangeState),
                 )
                 .with_system(
-                    move_down.system()
+                    move_down
+                        .system()
                         .label(EnemyFunctions::Move)
-                        .after(EnemyFunctions::ChangeState)
-                )
+                        .after(EnemyFunctions::ChangeState),
+                ),
         )
         // .add_system(cast_projectile.system())
         .add_system(quit_system.system())
