@@ -294,7 +294,7 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
 // LDtk 0,0 is the top left, moving -x,-y
 // Bevy 0,0 is the center of the screen
 // Need to offset and flip y
-fn convert_to_world(
+pub fn convert_to_world(
     width: f32,
     height: f32,
     grid_size: i32,

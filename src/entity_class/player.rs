@@ -143,10 +143,6 @@ pub fn player_movement(
         };
 
         if dir.0 != new_dir {
-            info!(
-                "Changed player dir to {:?} with vel {:?}",
-                new_dir, normalized
-            );
             dir.0 = new_dir
         }
     }
