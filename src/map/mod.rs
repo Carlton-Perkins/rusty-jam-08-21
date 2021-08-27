@@ -37,6 +37,7 @@ struct MapAssets {
 
 pub struct MapEntity {
     pub name: String,
+    pub grid_pos: Vec2,
     pub fields: HashMap<String, Option<Value>>,
 }
 
@@ -266,6 +267,7 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
                             })
                             .insert(MapEntity {
                                 name: name.to_string(),
+                                grid_pos: Vec2::new(entity.grid[0] as f32, entity.grid[1] as f32),
                                 fields,
                             })
                             .insert(GlobalTransform::default());
@@ -273,6 +275,7 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
                         c.spawn()
                             .insert(MapEntity {
                                 name: name.to_string(),
+                                grid_pos: Vec2::new(entity.grid[0] as f32, entity.grid[1] as f32),
                                 fields,
                             })
                             .insert(transform)

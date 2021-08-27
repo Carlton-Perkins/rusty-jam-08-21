@@ -1,11 +1,11 @@
 mod entity_class;
 mod map;
-mod tags;
+pub mod tags;
 
-use crate::entity_class::enemy::{move_down, rand_update_enemy_state, EnemyFunctions};
 use crate::entity_class::EntityClasses;
-use crate::entity_class::Player;
 use crate::map::{MapLocation, MapPlugin, MapScale};
+use crate::tags::MainCamera;
+use crate::tags::Player;
 use bevy::app::AppExit;
 use bevy::asset::AssetPath;
 use bevy::core::FixedTimestep;
@@ -31,7 +31,6 @@ enum GameLayer {
 
 // Marker Tags
 struct DebugLine;
-struct MainCamera;
 
 #[derive(StageLabel, Debug, Eq, Hash, PartialEq, Clone)]
 struct GameStage;
@@ -64,25 +63,9 @@ fn main() {
         //         .with_run_criteria(FixedTimestep::step(0.015))
         //         .with_system(player_movement.system()),
         // )
-        .add_system_set(
-            SystemSet::new()
-                .with_run_criteria(FixedTimestep::step(0.05))
-                .with_system(
-                    rand_update_enemy_state
-                        .system()
-                        .label(EnemyFunctions::ChangeState),
-                )
-                .with_system(
-                    move_down
-                        .system()
-                        .label(EnemyFunctions::Move)
-                        .after(EnemyFunctions::ChangeState),
-                ),
-        )
         // .add_system(cast_projectile.system())
         .add_system(quit_system.system())
         .add_system(ui.system())
-        .add_system(move_camera_with_player.system())
         // .add_system(inspect_map.system())
         // .add_system(player_vision_cone.system())
         // .add_system(delete_debug_lines.system())
@@ -255,22 +238,6 @@ fn setup_level(
     //     ),
     //     ..Default::default()
     // });
-}
-
-fn move_camera_with_player(
-    mut q: QuerySet<(
-        Query<&mut Transform, With<MainCamera>>,
-        Query<&Transform, With<Player>>,
-    )>,
-) {
-    let mut new_translation = Vec3::default();
-    if let Ok(player) = q.q1().single() {
-        new_translation = player.translation;
-    }
-
-    if let Ok(mut camera) = q.q0_mut().single_mut() {
-        camera.translation = new_translation;
-    }
 }
 
 fn ui(

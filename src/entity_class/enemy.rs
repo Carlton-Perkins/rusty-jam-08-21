@@ -1,10 +1,25 @@
 use crate::entity_class::patrol_path::PatrolPath;
-use crate::tags::Enemy;
+
 use crate::GameLayer;
 use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use heron::{CollisionLayers, CollisionShape, RigidBody, RotationConstraints, Velocity};
 use rand::Rng;
+
+#[derive(Inspectable, Debug)]
+pub struct Enemy {
+    pub state: EnemyState,
+    pub start_loc: Transform,
+    pub move_mod: i8,
+}
+impl Default for Enemy {
+    fn default() -> Self {
+        Enemy {
+            state: EnemyState::Idle,
+            ..Default::default()
+        }
+    }
+}
 
 #[derive(SystemLabel, Debug, Hash, PartialEq, Eq, Clone)]
 pub enum EnemyFunctions {

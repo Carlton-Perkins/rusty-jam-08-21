@@ -1,10 +1,10 @@
-use crate::{GameLayer, MainCamera};
+use crate::tags::MainCamera;
+use crate::GameLayer;
 use bevy::prelude::*;
 use heron::{CollisionLayers, CollisionShape, RigidBody, RotationConstraints, Velocity};
-use std::fs::DirBuilder;
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
-enum Direction {
+pub enum MovementDirection {
     Up,
     Down,
     Left,
@@ -13,7 +13,7 @@ enum Direction {
 
 pub struct Player;
 
-pub struct LastMovementDirection(Direction);
+pub struct LastMovementDirection(pub MovementDirection);
 
 pub fn spawn_player(
     mut c: &mut Commands,
@@ -22,7 +22,7 @@ pub fn spawn_player(
     transform: &Transform,
 ) {
     let player_spritesheet = assets.load("player.spritemap.png");
-    let texture_atlas = TextureAtlas::from_grid(player_spritesheet, Vec2::new(64., 64.), 3, 1);
+    let texture_atlas = TextureAtlas::from_grid(player_spritesheet, Vec2::new(64., 64.), 4, 1);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     // Spawn camera
@@ -57,7 +57,7 @@ pub fn spawn_player(
             CollisionLayers::none()
                 .with_group(GameLayer::Player)
                 .with_masks(&[GameLayer::World, GameLayer::Enemy]),
-        ).insert(LastMovementDirection(Direction::Down))
+        ).insert(LastMovementDirection(MovementDirection::Down))
     // .insert_bundle(ShapeBundle {
     //     shape: Shape::Circle {
     //         center: Default::default(),
@@ -130,40 +130,37 @@ pub fn player_movement(
 
         // Find primary direction
         let new_dir = match (norm_x, norm_y) {
-            (0., 0.) => Direction::Down,
+            (0., 0.) => MovementDirection::Down,
             (x, y) if x > y => {
                 if normalized.x > 0. {
-                    Direction::Right
+                    MovementDirection::Right
                 } else {
-                    Direction::Left
+                    MovementDirection::Left
                 }
             }
-            (x, y) if y > x => Direction::Down,
-            _ => Direction::Down,
+            (x, y) if y > x => MovementDirection::Down,
+            _ => MovementDirection::Down,
         };
 
         if dir.0 != new_dir {
+            info!("{:?}", new_dir);
             dir.0 = new_dir
         }
     }
 }
 
-pub fn animate_player(
-    mut q: Query<
-        (&LastMovementDirection, &mut TextureAtlasSprite),
-        (With<Player>, Changed<LastMovementDirection>),
-    >,
+pub fn move_camera_with_player(
+    mut q: QuerySet<(
+        Query<&mut Transform, With<MainCamera>>,
+        Query<&Transform, With<Player>>,
+    )>,
 ) {
-    fn map_direction_to_sprite(d: Direction) -> u32 {
-        match d {
-            Direction::Up => 0,
-            Direction::Down => 0,
-            Direction::Left => 2,
-            Direction::Right => 1,
-        }
+    let mut new_translation = Vec3::default();
+    if let Ok(player) = q.q1().single() {
+        new_translation = player.translation;
     }
 
-    for (dir, mut sprite) in q.iter_mut() {
-        sprite.index = map_direction_to_sprite(dir.0);
+    if let Ok(mut camera) = q.q0_mut().single_mut() {
+        camera.translation = new_translation;
     }
 }

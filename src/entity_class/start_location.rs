@@ -1,7 +1,7 @@
 use crate::entity_class::enemy::spawn_enemy;
 use crate::entity_class::indexer::{IndexingError, ParseFields};
 use crate::entity_class::player::spawn_player;
-use crate::entity_class::Player;
+use crate::tags::Player;
 use crate::{GameLayer, MainCamera};
 use anyhow::anyhow;
 use bevy::prelude::*;

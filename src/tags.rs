@@ -1,23 +1,9 @@
-use crate::entity_class::enemy::EnemyState;
 use bevy::prelude::Transform;
 use bevy_inspector_egui::Inspectable;
 
 pub struct Player;
 
-#[derive(Inspectable, Debug)]
-pub struct Enemy {
-    pub state: EnemyState,
-    pub start_loc: Transform,
-    pub move_mod: i8,
-}
-impl Default for Enemy {
-    fn default() -> Self {
-        Enemy {
-            state: EnemyState::Idle,
-            ..Default::default()
-        }
-    }
-}
+pub struct MainCamera;
 
 #[derive(Clone, Eq, PartialEq)]
 pub enum WorldType {
