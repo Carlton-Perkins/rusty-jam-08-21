@@ -12,6 +12,7 @@ use bevy::core::FixedTimestep;
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContext, EguiPlugin};
 use bevy_inspector_egui::{InspectorPlugin, WorldInspectorPlugin};
+use bevy_prototype_debug_lines::DebugLinesPlugin;
 use heron::prelude::*;
 use ldtk_rust::Project;
 use std::collections::HashMap;
@@ -23,10 +24,11 @@ const SCREEN_HEIGHT: f32 = 256.;
 const SCREEN_WIDTH: f32 = 256.;
 
 #[derive(PhysicsLayer)]
-enum GameLayer {
+pub enum GameLayer {
     World,
     Player,
     Enemy,
+    Projectile,
 }
 
 // Marker Tags
@@ -52,192 +54,10 @@ fn main() {
         .add_plugin(EguiPlugin)
         .add_plugin(WorldInspectorPlugin::new())
         .add_plugin(EntityClasses)
-        // .add_plugin(FrameTimeDiagnosticsPlugin::default())
-        // .add_plugin(LogDiagnosticsPlugin::default())
-        // .add_startup_system(setup_level.system())
-        // .add_startup_system(spawn_player.system())
-        // .add_system(update_map_collisions.system())
-        // .add_stage(
-        //     GameStage,
-        //     SystemStage::parallel()
-        //         .with_run_criteria(FixedTimestep::step(0.015))
-        //         .with_system(player_movement.system()),
-        // )
-        // .add_system(cast_projectile.system())
+        .add_plugin(DebugLinesPlugin)
         .add_system(quit_system.system())
         .add_system(ui.system())
-        // .add_system(inspect_map.system())
-        // .add_system(player_vision_cone.system())
-        // .add_system(delete_debug_lines.system())
-        // .add_system(apply_lifetime.system())
         .run()
-}
-
-// struct LdtkMapLayer {}
-// struct LdtkMapTileSet {
-//     enums: HashMap<i64, String>, // TODO allow for serde load into enum type
-//     custom_data: HashMap<i64, String>, // TODO give structure to custom_data
-// }
-//
-// struct LdtkEnumTags {}
-
-fn setup_level(
-    mut c: Commands,
-    asset_server: Res<AssetServer>,
-    mut textures_atlases: ResMut<Assets<TextureAtlas>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
-    // Enable HotReload
-    asset_server
-        .watch_for_changes()
-        .expect("Unable to enable HotReload");
-
-    let ldtk = Project::new("assets/map.ldtk".into());
-    let mut tileset_textures = HashMap::new();
-
-    // Todo Enums
-
-    // Load all tilesets
-    for tileset in ldtk.defs.tilesets {
-        let id = tileset.uid;
-        let sprite_path = tileset.rel_path;
-        let tile_size = Vec2::new(tileset.px_wid as f32, tileset.px_hei as f32);
-        let texture_handle = asset_server.load(AssetPath::new_ref(Path::new(&sprite_path), None));
-        let atlas = TextureAtlas::from_grid(
-            texture_handle.clone(),
-            tile_size,
-            tileset.c_wid as usize,
-            tileset.c_hei as usize,
-        );
-        let texture_handle_atlas = textures_atlases.add(atlas);
-
-        // let mut tile_enum_values = HashMap::new();
-        // for enum_label in tileset.enum_tags {
-        //     enum_label.iter().for_each(|(key, value)| {
-        //         if let Some(v) = value {
-        //             info!("{} - {:?}", key, v);
-        //             match v {
-        //                 Value::Array(ids) => {
-        //                     for id_u in ids {
-        //                         match id_u {
-        //                             Value::Number(id) => {
-        //                                 tile_enum_values.insert(id.as_i64().unwrap(), key.clone());
-        //                             }
-        //                             _ => {
-        //                                 panic!(
-        //                                     "Expected number in enum tile id position, got {:?}",
-        //                                     id_u
-        //                                 )
-        //                             }
-        //                         }
-        //                     }
-        //                 }
-        //                 _ => {
-        //                     panic!("Expected array in enum value position, got {:?}", v)
-        //                 }
-        //             }
-        //         }
-        //     })
-        // }
-        // let extra_data = LdtkMapTileSet {
-        //     enums: HashtMap::new(),
-        //     custom_data: HashMap::new(), // TODO Populate for real
-        // };
-        info!("Loading tileset {}...", sprite_path);
-        tileset_textures.insert(id, (texture_handle.clone(), texture_handle_atlas));
-
-        // c.spawn().insert_bundle(SpriteBundle {
-        //     material: materials.add(texture_handle.clone().into()),
-        //     ..Default::default()
-        // });
-    }
-
-    // Load all levels
-    for level in ldtk.levels {
-        let layer_instances = level.layer_instances.as_ref().unwrap();
-        for (z_layer, layer_instance) in layer_instances.iter().rev().enumerate() {
-            let layer_eid = c
-                .spawn()
-                // .insert(LdtkMapLayer {})
-                .insert(Transform::default())
-                .id();
-
-            match layer_instance.layer_instance_type.as_str() {
-                "Tiles" => {
-                    let tileset_id = layer_instance.tileset_def_uid.unwrap();
-                    let (tileset_texture, tileset_atlas) =
-                        tileset_textures.get(&tileset_id).unwrap();
-                    let grid_tiles = &layer_instance.grid_tiles;
-                    for tile in grid_tiles {
-                        let tile_id = tile.t;
-                        let tile_eid = c
-                            .spawn()
-                            //     .insert_bundle(SpriteBundle {
-                            //         material: materials.add(tileset_texture.clone().into()),
-                            //         ..Default::default()
-                            //     })
-                            .insert_bundle(SpriteSheetBundle {
-                                sprite: TextureAtlasSprite::new(tile_id as u32),
-                                texture_atlas: tileset_atlas.clone(),
-                                transform: Transform {
-                                    translation: Vec3::new(
-                                        tile.px[0] as f32,
-                                        -tile.px[1] as f32,
-                                        0.,
-                                    ),
-                                    scale: Vec3::splat(0.25),
-                                    rotation: Default::default(),
-                                },
-                                ..Default::default()
-                            })
-                            // .insert(LdtkMapTileSet {
-                            //     enums: extra_data.enums.clone(),
-                            //     custom_data: extra_data.custom_data.clone(),
-                            // })
-                            .id();
-
-                        if tile.t == 0 {
-                            c.entity(tile_eid)
-                                .insert(CollisionShape::Cuboid {
-                                    half_extends: Vec3::new(
-                                        (layer_instance.grid_size as f32 - 2.) / 2.,
-                                        (layer_instance.grid_size as f32 - 2.) / 2.,
-                                        0.0,
-                                    ),
-                                    border_radius: None,
-                                })
-                                .insert(RigidBody::Static)
-                                .insert(
-                                    CollisionLayers::none()
-                                        .with_group(GameLayer::World)
-                                        .with_masks(&[GameLayer::Player, GameLayer::Enemy]),
-                                );
-                        }
-                        // c.entity(layer_eid).push_children(&[tile_eid]);
-                        // info!("Tile : {:?}", tile.px);
-                    }
-                }
-                mode => {
-                    warn!(
-                        "Skipping loading for layer {}, of type {}",
-                        layer_instance.identifier, mode
-                    );
-                }
-            }
-        }
-    }
-
-    // World
-    // c.spawn().insert_bundle(LdtkMapBundle {
-    //     map: asset_server.load("map.ldtk"),
-    //     // Center the map
-    //     transform: Transform::from_xyz(
-    //         -((SCREEN_WIDTH * 4.) / 2.),
-    //         -((SCREEN_HEIGHT * 4.) / 2.),
-    //         0.,
-    //     ),
-    //     ..Default::default()
-    // });
 }
 
 fn ui(
@@ -247,7 +67,6 @@ fn ui(
 ) {
     let window = windows.get_primary().unwrap();
     let mut cursor_pos = window.cursor_position().unwrap_or_default();
-    // let player = q_player.single()().unwrap_or(Transform::default());
 
     egui::Window::new("Cursor").show(ui_context.ctx(), |ui| {
         ui.label("Pos:");
@@ -492,112 +311,6 @@ fn ui(
 // struct Projectile;
 // struct Lifetime {
 //     lifetime: Timer,
-// }
-
-// TODO generalize to any CASTER instead of player
-// TODO abstract over input mode
-// Create projectile
-// fn cast_projectile(
-//     mut c: Commands,
-//     windows: Res<Windows>,
-//     input: Res<Input<MouseButton>>,
-//     player: Query<&Transform, With<Player>>,
-//     camera: Query<&Transform, With<MainCamera>>,
-//     asset_server: Res<AssetServer>,
-//     mut sprite_sheets: ResMut<Assets<SpriteSheet>>,
-// ) {
-//     // On click, fire a projectile from the player with a velocity relative to the distance the cursor is from the player
-//     // projectile should have limited bounces and limited lifetime
-//     // Spread?
-//     let window = windows.get_primary().unwrap();
-//     let mut rng = rand::thread_rng();
-//     let projectile_spritesheet = asset_server.load("projectile.spritemap.png");
-//
-//     if input.just_pressed(MouseButton::Left) {
-//         if let Ok(start) = player.single() {
-//             if let Some(cursor) = window.cursor_position() {
-//                 let size = Vec2::new(window.width() as f32, window.height() as f32);
-//
-//                 // the default orthographic projection is in pixels from the center;
-//                 // just undo the translation
-//                 let p = cursor - size / 2.0;
-//
-//                 // assuming there is exactly one main camera entity, so this is OK
-//                 let camera_transform = camera.single().unwrap();
-//
-//                 // apply the camera transform
-//                 let pos_wld = camera_transform.compute_matrix() * p.extend(0.0).extend(1.0);
-//                 info!("World coords: {}/{}", pos_wld.x, pos_wld.y);
-//
-//                 let vel = (start.translation.truncate() + pos_wld.truncate().truncate());
-//                 // let vel = Vec2::new(500., 0.);
-//                 info!("Projectile velocity: {}", vel);
-//                 info!("Player pos: {}", start.translation);
-//
-//                 c.spawn()
-//                     .insert_bundle(SpriteSheetBundle {
-//                         sprite_bundle: SpriteBundle {
-//                             image: projectile_spritesheet.clone(),
-//                             transform: Transform::from_xyz(
-//                                 start.translation.x,
-//                                 start.translation.y,
-//                                 3.,
-//                             ),
-//                             ..Default::default()
-//                         },
-//                         sprite_sheet: sprite_sheets.add(SpriteSheet {
-//                             grid_size: UVec2::new(64, 64),
-//                             tile_index: 0,
-//                         }),
-//                     })
-//                     .insert(Projectile {})
-//                     .insert(Lifetime {
-//                         lifetime: Timer::from_seconds(rng.gen_range(1.0..2.0), false),
-//                     })
-//                     .insert(Velocity::from_linear(
-//                         vel.extend(0.) * Vec3::new(1., -1., 1.),
-//                     ))
-//                     .insert(RigidBody::Dynamic)
-//                     .insert(TesselatedCollider {
-//                         image: projectile_spritesheet,
-//                         tesselator_config: TesselatedColliderConfig {
-//                             vertice_separation: 0.,
-//                             ..Default::default()
-//                         },
-//                         ..Default::default()
-//                     })
-//                     .insert(RotationConstraints::lock())
-//                     .insert(PhysicMaterial {
-//                         restitution: 0.0,
-//                         density: 1.0,
-//                         friction: 0.0,
-//                     })
-//                     .insert(CollisionLayers::all::<GameLayer>().with_groups([GameLayer::Player]));
-//
-//                 // c.spawn()
-//                 //     .insert_bundle(ShapeBundle {
-//                 //         shape: Shape::Circle {
-//                 //             center: Default::default(),
-//                 //             radius: 2.,
-//                 //             fill: Color32::TRANSPARENT,
-//                 //             stroke: Stroke::new(5., Color32::GREEN),
-//                 //         },
-//                 //         transform: Transform::from_xyz(
-//                 //             start.translation.x,
-//                 //             start.translation.y,
-//                 //             10.,
-//                 //         ),
-//                 //         // global_transform: GlobalTransform::from_xyz(
-//                 //         //     info.collision_point.x,
-//                 //         //     info.collision_point.y,
-//                 //         //     10.,
-//                 //         // ),
-//                 //         ..Default::default()
-//                 //     })
-//                 //     .insert(DebugLine);
-//             }
-//         }
-//     }
 // }
 
 // fn show_colliders(q: Query<&CollisionShape>) {

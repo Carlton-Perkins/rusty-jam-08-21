@@ -21,7 +21,6 @@ pub fn animate_creature(
     }
 
     for (dir, mut sprite) in q.iter_mut() {
-        info!("Updating sprite due to movement {:?}", dir.0);
         sprite.index = map_direction_to_sprite(dir.0);
     }
 }
@@ -57,7 +56,6 @@ pub fn update_last_direction(
         };
 
         if dir.0 != new_dir {
-            info!("{:?}", new_dir);
             dir.0 = new_dir
         }
     }

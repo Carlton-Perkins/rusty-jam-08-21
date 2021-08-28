@@ -86,7 +86,7 @@ pub fn spawn_enemy(
         .insert(
             CollisionLayers::none()
                 .with_group(GameLayer::Enemy)
-                .with_masks(&[GameLayer::World, GameLayer::Player]),
+                .with_masks(&[GameLayer::World, GameLayer::Player, GameLayer::Projectile]),
         );
 }
 

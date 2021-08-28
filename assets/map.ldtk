@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 25,
+	"nextUid": 26,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -122,7 +122,7 @@
 			"color": "#3934EF",
 			"renderMode": "Tile",
 			"showName": true,
-			"tilesetId": 8,
+			"tilesetId": 25,
 			"tileId": 0,
 			"tileRenderMode": "Stretch",
 			"maxCount": 0,
@@ -335,6 +335,23 @@
 			"customData": [],
 			"savedSelections": [],
 			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "0a33000000000000" }
+		},
+		{
+			"__cWid": 4,
+			"__cHei": 1,
+			"identifier": "Player_Animations",
+			"uid": 25,
+			"relPath": "player.spritemap.png",
+			"pxWid": 256,
+			"pxHei": 64,
+			"tileGridSize": 64,
+			"spacing": 0,
+			"padding": 0,
+			"tagsSourceEnumUid": 20,
+			"enumTags": [ { "enumValueId": "Player", "tileIds": [] }, { "enumValueId": "Enemy", "tileIds": [] } ],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "3665255425543554" }
 		}
 	], "enums": [
 		{ "identifier": "Collideable", "uid": 9, "values": [
@@ -578,7 +595,7 @@
 							"__identifier": "Start_Location",
 							"__grid": [8,13],
 							"__pivot": [0.5,0.5],
-							"__tile": { "tilesetUid": 8, "srcRect": [0,0,64,64] },
+							"__tile": { "tilesetUid": 25, "srcRect": [0,0,64,64] },
 							"width": 64,
 							"height": 64,
 							"defUid": 3,
@@ -598,10 +615,39 @@
 							]
 						},
 						{
+							"__identifier": "Patrol_Path",
+							"__grid": [2,7],
+							"__pivot": [0.5,0.5],
+							"__tile": null,
+							"width": 16,
+							"height": 16,
+							"defUid": 14,
+							"px": [160,480],
+							"fieldInstances": [{
+								"__identifier": "Path",
+								"__value": [ { "cx": 2, "cy": 10 }, { "cx": 4, "cy": 10 }, { "cx": 4, "cy": 7 }, { "cx": 2, "cy": 7 } ],
+								"__type": "Array<Point>",
+								"defUid": 16,
+								"realEditorValues": [ {
+									"id": "V_String",
+									"params": ["2,10"]
+								}, {
+									"id": "V_String",
+									"params": ["4,10"]
+								}, {
+									"id": "V_String",
+									"params": ["4,7"]
+								}, {
+									"id": "V_String",
+									"params": ["2,7"]
+								} ]
+							}]
+						},
+						{
 							"__identifier": "Start_Location",
 							"__grid": [2,5],
 							"__pivot": [0.5,0.5],
-							"__tile": { "tilesetUid": 8, "srcRect": [0,0,64,64] },
+							"__tile": { "tilesetUid": 25, "srcRect": [0,0,64,64] },
 							"width": 64,
 							"height": 64,
 							"defUid": 3,
@@ -624,7 +670,7 @@
 							"__identifier": "Start_Location",
 							"__grid": [13,5],
 							"__pivot": [0.5,0.5],
-							"__tile": { "tilesetUid": 8, "srcRect": [0,0,64,64] },
+							"__tile": { "tilesetUid": 25, "srcRect": [0,0,64,64] },
 							"width": 64,
 							"height": 64,
 							"defUid": 3,
@@ -669,130 +715,6 @@
 								}, {
 									"id": "V_String",
 									"params": ["11,14"]
-								} ]
-							}]
-						},
-						{
-							"__identifier": "Patrol_Path",
-							"__grid": [1,1],
-							"__pivot": [0.5,0.5],
-							"__tile": null,
-							"width": 16,
-							"height": 16,
-							"defUid": 14,
-							"px": [96,96],
-							"fieldInstances": [{
-								"__identifier": "Path",
-								"__value": [ { "cx": 4, "cy": 1 }, { "cx": 4, "cy": 14 }, { "cx": 1, "cy": 14 }, { "cx": 1, "cy": 1 } ],
-								"__type": "Array<Point>",
-								"defUid": 16,
-								"realEditorValues": [ {
-									"id": "V_String",
-									"params": ["4,1"]
-								}, {
-									"id": "V_String",
-									"params": ["4,14"]
-								}, {
-									"id": "V_String",
-									"params": ["1,14"]
-								}, {
-									"id": "V_String",
-									"params": ["1,1"]
-								} ]
-							}]
-						},
-						{
-							"__identifier": "Patrol_Path",
-							"__grid": [1,1],
-							"__pivot": [0.5,0.5],
-							"__tile": null,
-							"width": 16,
-							"height": 16,
-							"defUid": 14,
-							"px": [96,96],
-							"fieldInstances": [{ "__identifier": "Path", "__value": [], "__type": "Array<Point>", "defUid": 16, "realEditorValues": [] }]
-						},
-						{
-							"__identifier": "Patrol_Path",
-							"__grid": [14,1],
-							"__pivot": [0.5,0.5],
-							"__tile": null,
-							"width": 16,
-							"height": 16,
-							"defUid": 14,
-							"px": [928,96],
-							"fieldInstances": [{ "__identifier": "Path", "__value": [], "__type": "Array<Point>", "defUid": 16, "realEditorValues": [] }]
-						},
-						{
-							"__identifier": "Patrol_Path",
-							"__grid": [14,1],
-							"__pivot": [0.5,0.5],
-							"__tile": null,
-							"width": 16,
-							"height": 16,
-							"defUid": 14,
-							"px": [928,96],
-							"fieldInstances": [{ "__identifier": "Path", "__value": [], "__type": "Array<Point>", "defUid": 16, "realEditorValues": [] }]
-						},
-						{
-							"__identifier": "Patrol_Path",
-							"__grid": [14,1],
-							"__pivot": [0.5,0.5],
-							"__tile": null,
-							"width": 16,
-							"height": 16,
-							"defUid": 14,
-							"px": [928,96],
-							"fieldInstances": [{ "__identifier": "Path", "__value": [], "__type": "Array<Point>", "defUid": 16, "realEditorValues": [] }]
-						},
-						{
-							"__identifier": "Patrol_Path",
-							"__grid": [14,1],
-							"__pivot": [0.5,0.5],
-							"__tile": null,
-							"width": 16,
-							"height": 16,
-							"defUid": 14,
-							"px": [928,96],
-							"fieldInstances": [{ "__identifier": "Path", "__value": [], "__type": "Array<Point>", "defUid": 16, "realEditorValues": [] }]
-						},
-						{
-							"__identifier": "Patrol_Path",
-							"__grid": [14,1],
-							"__pivot": [0.5,0.5],
-							"__tile": null,
-							"width": 16,
-							"height": 16,
-							"defUid": 14,
-							"px": [928,96],
-							"fieldInstances": [{ "__identifier": "Path", "__value": [], "__type": "Array<Point>", "defUid": 16, "realEditorValues": [] }]
-						},
-						{
-							"__identifier": "Patrol_Path",
-							"__grid": [14,1],
-							"__pivot": [0.5,0.5],
-							"__tile": null,
-							"width": 16,
-							"height": 16,
-							"defUid": 14,
-							"px": [928,96],
-							"fieldInstances": [{
-								"__identifier": "Path",
-								"__value": [ { "cx": 11, "cy": 1 }, { "cx": 11, "cy": 14 }, { "cx": 14, "cy": 14 }, { "cx": 14, "cy": 1 } ],
-								"__type": "Array<Point>",
-								"defUid": 16,
-								"realEditorValues": [ {
-									"id": "V_String",
-									"params": ["11,1"]
-								}, {
-									"id": "V_String",
-									"params": ["11,14"]
-								}, {
-									"id": "V_String",
-									"params": ["14,14"]
-								}, {
-									"id": "V_String",
-									"params": ["14,1"]
 								} ]
 							}]
 						}
