@@ -1,11 +1,13 @@
 mod entity_class;
 mod map;
 pub mod tags;
+mod ui;
 
 use crate::entity_class::EntityClasses;
 use crate::map::{MapLocation, MapPlugin, MapScale};
 use crate::tags::MainCamera;
 use crate::tags::Player;
+use crate::ui::GameOverlayPlugin;
 use bevy::app::AppExit;
 use bevy::asset::AssetPath;
 use bevy::core::FixedTimestep;
@@ -55,9 +57,15 @@ fn main() {
         .add_plugin(WorldInspectorPlugin::new())
         .add_plugin(EntityClasses)
         .add_plugin(DebugLinesPlugin)
+        .add_plugin(GameOverlayPlugin)
+        .add_startup_system(setup.system())
         .add_system(quit_system.system())
         .add_system(ui.system())
         .run()
+}
+
+fn setup(asset_server: Res<AssetServer>) {
+    asset_server.watch_for_changes().unwrap();
 }
 
 fn ui(

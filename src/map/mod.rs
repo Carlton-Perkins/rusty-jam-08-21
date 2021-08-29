@@ -250,14 +250,14 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
                             layer_info.depth,
                         ),
                         rotation: Default::default(),
-                        scale: Default::default(),
+                        scale: Vec3::splat(scale.0),
                     };
 
                     if let Some(tile) = &entity.tile {
                         c.spawn()
                             .insert_bundle(SpriteSheetBundle {
-                                transform: transform,
-                                sprite: TextureAtlasSprite::new(tile.tileset_uid as u32),
+                                transform,
+                                sprite: TextureAtlasSprite::new((tile.src_rect[0] / 64) as u32),
                                 texture_atlas: assets
                                     .sprite_sheets
                                     .get(&(tile.tileset_uid as i32))
@@ -269,8 +269,7 @@ fn update_map(mut c: Commands, mut map: ResMut<Map>, assets: Res<MapAssets>, sca
                                 name: name.to_string(),
                                 grid_pos: Vec2::new(entity.grid[0] as f32, entity.grid[1] as f32),
                                 fields,
-                            })
-                            .insert(GlobalTransform::default());
+                            });
                     } else {
                         c.spawn()
                             .insert(MapEntity {

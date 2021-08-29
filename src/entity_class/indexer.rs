@@ -1,5 +1,6 @@
 use crate::entity_class::door::{Door, DOOR_ID};
-use crate::entity_class::patrol_path::PatrolPath;
+use crate::entity_class::gold::{Gold, GOLD_ID};
+use crate::entity_class::patrol_path::{PatrolPath, PATROL_PATH_ID};
 use crate::entity_class::start_location::{StartLocation, START_LOCATION_ID};
 use crate::map::MapEntity;
 use anyhow::{anyhow, Error};
@@ -54,6 +55,7 @@ pub fn index_entities(
             START_LOCATION_ID => insert(eid, name, StartLocation::parse(fields), c),
             DOOR_ID => insert(eid, name, Door::parse(fields), c),
             PATROL_PATH_ID => insert(eid, name, PatrolPath::parse(fields), c),
+            GOLD_ID => insert(eid, name, Gold::parse(fields), c),
             _ => {
                 warn!("Unknown entity type {}", entity.name);
 

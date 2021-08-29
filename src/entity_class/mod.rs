@@ -6,6 +6,7 @@ use bevy::prelude::*;
 mod creature;
 mod door;
 mod enemy;
+mod gold;
 mod health;
 mod indexer;
 mod lifetime;
@@ -48,6 +49,7 @@ impl Plugin for EntityClasses {
             .add_system(projectile::on_collide_apply_damage.system())
             .add_system(projectile::on_collide_despawn.system())
             .add_system(projectile::cast_projectile.system())
-            .add_system(lifetime::apply_lifetime.system());
+            .add_system(lifetime::apply_lifetime.system())
+            .add_system(gold::setup_gold.system());
     }
 }

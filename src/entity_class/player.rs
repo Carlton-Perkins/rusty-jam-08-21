@@ -45,31 +45,12 @@ pub fn spawn_player(
             half_extends: Vec3::new(20., 28., 0.),
             border_radius: None,
         })
-        // .insert(TesselatedCollider {
-        //     image: player_sprite,
-        //     tesselator_config: TesselatedColliderConfig {
-        //         vertice_separation: 0.,
-        //         ..Default::default()
-        //     },
-        //     ..Default::default()
-        // })
         .insert(
             CollisionLayers::none()
                 .with_group(GameLayer::Player)
                 .with_masks(&[GameLayer::World, GameLayer::Enemy]),
-        ).insert(LastMovementDirection(MovementDirection::Down))
-    // .insert_bundle(ShapeBundle {
-    //     shape: Shape::Circle {
-    //         center: Default::default(),
-    //         radius: 150.,
-    //         fill: Color32::TRANSPARENT,
-    //         stroke: Stroke::new(1., Color32::RED),
-    //     },
-    //     transform: Transform::from_xyz(0., 0., 1.),
-    //     ..Default::default()
-    // });
-    // .insert_children(0, &[camera])
-    ;
+        )
+        .insert(LastMovementDirection(MovementDirection::Down));
 }
 
 pub fn player_movement(input: Res<Input<KeyCode>>, mut q: Query<&mut Velocity, With<Player>>) {

@@ -9,7 +9,7 @@
 		"url": "https://ldtk.io"
 	},
 	"jsonVersion": "0.9.3",
-	"nextUid": 26,
+	"nextUid": 29,
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
 	"worldGridHeight": 256,
@@ -58,7 +58,7 @@
 			"displayOpacity": 1,
 			"pxOffsetX": 0,
 			"pxOffsetY": 0,
-			"requiredTags": [],
+			"requiredTags": ["World"],
 			"excludedTags": [],
 			"intGridValues": [{ "value": 1, "identifier": null, "color": "#000000" }],
 			"autoTilesetDefUid": null,
@@ -78,7 +78,7 @@
 			"pxOffsetX": 0,
 			"pxOffsetY": 0,
 			"requiredTags": [],
-			"excludedTags": [],
+			"excludedTags": ["World"],
 			"intGridValues": [{ "value": 1, "identifier": null, "color": "#000000" }],
 			"autoTilesetDefUid": null,
 			"autoRuleGroups": [],
@@ -222,7 +222,7 @@
 		{
 			"identifier": "Door",
 			"uid": 23,
-			"tags": [],
+			"tags": ["World"],
 			"width": 64,
 			"height": 64,
 			"resizableX": false,
@@ -243,6 +243,52 @@
 			"pivotX": 0,
 			"pivotY": 0,
 			"fieldDefs": []
+		},
+		{
+			"identifier": "Gold",
+			"uid": 26,
+			"tags": [],
+			"width": 16,
+			"height": 16,
+			"resizableX": false,
+			"resizableY": false,
+			"keepAspectRatio": false,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#94D9B3",
+			"renderMode": "Tile",
+			"showName": true,
+			"tilesetId": 28,
+			"tileId": 0,
+			"tileRenderMode": "Stretch",
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0.5,
+			"pivotY": 0.5,
+			"fieldDefs": [
+				{
+					"identifier": "Value",
+					"__type": "Int",
+					"uid": 27,
+					"type": "F_Int",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "ValueOnly",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": { "id": "V_Int", "params": [10] },
+					"textLanguageMode": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -257,16 +303,23 @@
 			"spacing": 0,
 			"padding": 0,
 			"tagsSourceEnumUid": 9,
-			"enumTags": [ { "enumValueId": "Air", "tileIds": [1,6] }, { "enumValueId": "Wall", "tileIds": [0] }, { "enumValueId": "Door", "tileIds": [4,5,6] }, { "enumValueId": "Nothing", "tileIds": [2,3,7,8,9,10,11,12,13,14,15] } ],
+			"enumTags": [
+				{ "enumValueId": "Air", "tileIds": [1,6] },
+				{ "enumValueId": "Wall", "tileIds": [0] },
+				{ "enumValueId": "Door", "tileIds": [4,5,6] },
+				{ "enumValueId": "Nothing", "tileIds": [2,3,7,8,9,10,11,12,13,14,15] },
+				{ "enumValueId": "Gold", "tileIds": [2] }
+			],
 			"customData": [
 				{ "tileId": 0, "data": "Wall" },
 				{ "tileId": 1, "data": "Floor" },
+				{ "tileId": 2, "data": "Gold" },
 				{ "tileId": 4, "data": "LockedDoor" },
 				{ "tileId": 5, "data": "Gate" },
 				{ "tileId": 6, "data": "OpenDoor" }
 			],
 			"savedSelections": [],
-			"cachedPixelData": { "opaqueTiles": "1100000000000000", "averageColors": "f555f97400000000988800000000000000000000000000000000000000000000" }
+			"cachedPixelData": { "opaqueTiles": "1100000000000000", "averageColors": "f555f97400000000988898888888000000000000000000000000000000000000" }
 		},
 		{
 			"__cWid": 1,
@@ -352,13 +405,37 @@
 			"customData": [],
 			"savedSelections": [],
 			"cachedPixelData": { "opaqueTiles": "0000", "averageColors": "3665255425543554" }
+		},
+		{
+			"__cWid": 1,
+			"__cHei": 1,
+			"identifier": "Gold",
+			"uid": 28,
+			"relPath": "gold.sprite.png",
+			"pxWid": 64,
+			"pxHei": 64,
+			"tileGridSize": 64,
+			"spacing": 0,
+			"padding": 0,
+			"tagsSourceEnumUid": 9,
+			"enumTags": [
+				{ "enumValueId": "Air", "tileIds": [] },
+				{ "enumValueId": "Wall", "tileIds": [] },
+				{ "enumValueId": "Door", "tileIds": [] },
+				{ "enumValueId": "Nothing", "tileIds": [] },
+				{ "enumValueId": "Gold", "tileIds": [0] }
+			],
+			"customData": [{ "tileId": 0, "data": "Gold" }],
+			"savedSelections": [],
+			"cachedPixelData": { "opaqueTiles": "0", "averageColors": "5ca4" }
 		}
 	], "enums": [
 		{ "identifier": "Collideable", "uid": 9, "values": [
 			{ "id": "Air", "tileId": null, "color": 0, "__tileSrcRect": null },
 			{ "id": "Wall", "tileId": null, "color": 0, "__tileSrcRect": null },
 			{ "id": "Door", "tileId": null, "color": 0, "__tileSrcRect": null },
-			{ "id": "Nothing", "tileId": null, "color": 0, "__tileSrcRect": null }
+			{ "id": "Nothing", "tileId": null, "color": 0, "__tileSrcRect": null },
+			{ "id": "Gold", "tileId": null, "color": 0, "__tileSrcRect": null }
 		], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null },
 		{ "identifier": "Character", "uid": 20, "values": [ { "id": "Player", "tileId": null, "color": 0, "__tileSrcRect": null }, { "id": "Enemy", "tileId": null, "color": 0, "__tileSrcRect": null } ], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null }
 	], "externalEnums": [], "levelFields": [] },
@@ -717,6 +794,94 @@
 									"params": ["11,14"]
 								} ]
 							}]
+						},
+						{
+							"__identifier": "Gold",
+							"__grid": [6,6],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 28, "srcRect": [0,0,64,64] },
+							"width": 16,
+							"height": 16,
+							"defUid": 26,
+							"px": [416,416],
+							"fieldInstances": [{ "__identifier": "Value", "__value": 10, "__type": "Int", "defUid": 27, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Gold",
+							"__grid": [7,6],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 28, "srcRect": [0,0,64,64] },
+							"width": 16,
+							"height": 16,
+							"defUid": 26,
+							"px": [480,416],
+							"fieldInstances": [{ "__identifier": "Value", "__value": 10, "__type": "Int", "defUid": 27, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Gold",
+							"__grid": [8,6],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 28, "srcRect": [0,0,64,64] },
+							"width": 16,
+							"height": 16,
+							"defUid": 26,
+							"px": [544,416],
+							"fieldInstances": [{ "__identifier": "Value", "__value": 10, "__type": "Int", "defUid": 27, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Gold",
+							"__grid": [9,6],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 28, "srcRect": [0,0,64,64] },
+							"width": 16,
+							"height": 16,
+							"defUid": 26,
+							"px": [608,416],
+							"fieldInstances": [{ "__identifier": "Value", "__value": 10, "__type": "Int", "defUid": 27, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Gold",
+							"__grid": [6,7],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 28, "srcRect": [0,0,64,64] },
+							"width": 16,
+							"height": 16,
+							"defUid": 26,
+							"px": [416,480],
+							"fieldInstances": [{ "__identifier": "Value", "__value": 10, "__type": "Int", "defUid": 27, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Gold",
+							"__grid": [7,7],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 28, "srcRect": [0,0,64,64] },
+							"width": 16,
+							"height": 16,
+							"defUid": 26,
+							"px": [480,480],
+							"fieldInstances": [{ "__identifier": "Value", "__value": 10, "__type": "Int", "defUid": 27, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Gold",
+							"__grid": [8,7],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 28, "srcRect": [0,0,64,64] },
+							"width": 16,
+							"height": 16,
+							"defUid": 26,
+							"px": [544,480],
+							"fieldInstances": [{ "__identifier": "Value", "__value": 10, "__type": "Int", "defUid": 27, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Gold",
+							"__grid": [9,7],
+							"__pivot": [0.5,0.5],
+							"__tile": { "tilesetUid": 28, "srcRect": [0,0,64,64] },
+							"width": 16,
+							"height": 16,
+							"defUid": 26,
+							"px": [608,480],
+							"fieldInstances": [{ "__identifier": "Value", "__value": 10, "__type": "Int", "defUid": 27, "realEditorValues": [] }]
 						}
 					]
 				},
