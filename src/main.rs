@@ -1,24 +1,18 @@
+#[allow(unused, illegal_floating_point_literal_pattern, unused_variables)]
 mod entity_class;
 mod map;
 pub mod tags;
 mod ui;
 
 use crate::entity_class::EntityClasses;
-use crate::map::{MapLocation, MapPlugin, MapScale};
-use crate::tags::MainCamera;
-use crate::tags::Player;
+use crate::map::map_loader::{MapLocation, MapPlugin, MapScale};
 use crate::ui::GameOverlayPlugin;
 use bevy::app::AppExit;
-use bevy::asset::AssetPath;
-use bevy::core::FixedTimestep;
 use bevy::prelude::*;
 use bevy_egui::{egui, EguiContext, EguiPlugin};
-use bevy_inspector_egui::{InspectorPlugin, WorldInspectorPlugin};
+use bevy_inspector_egui::WorldInspectorPlugin;
 use bevy_prototype_debug_lines::DebugLinesPlugin;
 use heron::prelude::*;
-use ldtk_rust::Project;
-use std::collections::HashMap;
-use std::path::Path;
 
 // use bevy_retrograde::prelude::*;
 
@@ -32,9 +26,6 @@ pub enum GameLayer {
     Enemy,
     Projectile,
 }
-
-// Marker Tags
-struct DebugLine;
 
 #[derive(StageLabel, Debug, Eq, Hash, PartialEq, Clone)]
 struct GameStage;
@@ -71,7 +62,7 @@ fn setup(asset_server: Res<AssetServer>) {
 fn ui(
     ui_context: Res<EguiContext>,
     windows: Res<Windows>,
-    q_player: Query<&Transform, With<Player>>,
+    // q_player: Query<&Transform, With<Player>>,
 ) {
     let window = windows.get_primary().unwrap();
     let mut cursor_pos = window.cursor_position().unwrap_or_default();
@@ -313,120 +304,6 @@ fn ui(
 //         // c.entity(e_id)
 //         //     .insert_children(0, &[left_debug, right_debug, ray_circle]);
 //         // c.entity(e_id).insert_children(1, &loop_debug_lines);
-//     }
-// }
-
-// struct Projectile;
-// struct Lifetime {
-//     lifetime: Timer,
-// }
-
-// fn show_colliders(q: Query<&CollisionShape>) {
-//     for shape in q.iter() {
-//         info!("Shape {:?}", shape);
-//     }
-// }
-
-// fn apply_lifetime(mut c: Commands, time: Res<Time>, mut q: Query<(Entity, &mut Lifetime)>) {
-//     for (e_id, mut lifetime) in q.iter_mut() {
-//         if lifetime.lifetime.tick(time.delta()).just_finished() {
-//             c.entity(e_id).despawn();
-//         }
-//     }
-// }
-
-// fn delete_debug_lines(mut c: Commands, q: Query<Entity, With<DebugLine>>) {
-//     for e in q.iter() {
-//         c.entity(e).despawn_recursive();
-//     }
-// }
-
-// fn inspect_map(q: Query<&LdtkMapLayer>, q2: Res<Assets<LdtkMap>>) {
-//     // if let Some(project) = q.iter().next() {
-//     //     let map_handle = &project.map;
-//     //     let map = q2.get(map_handle).unwrap();
-//     //     info!("project defs {:?}", map.project.defs.tilesets);
-//     // }
-// }
-
-// struct MapLayerLoaded;
-// /// This system will go through each layer in spawned maps and generate a collision shape for each tile
-// fn update_map_collisions(
-//     mut commands: Commands,
-//     map_layers: Query<(Entity, &LdtkMapLayer, &Handle<Image>), Without<MapLayerLoaded>>,
-//     image_assets: Res<Assets<Image>>,
-// ) {
-//     for (layer_ent, map_layer, image_handle) in map_layers.iter() {
-//         // ( which should be fixed eventually by rust-analyzer )
-//         let map_layer: &LdtkMapLayer = map_layer;
-//
-//         let image = if let Some(image) = image_assets.get(image_handle) {
-//             image
-//         } else {
-//             continue;
-//         };
-//
-//         // Get the tile size of the map
-//         let tile_size = map_layer.layer_instance.__grid_size as u32;
-//
-//         let mut layer_commands = commands.entity(layer_ent);
-//
-//         // Only create collsions for things in the world layer for now
-//         // TODO make this smarter by reading the tag data of the tile set
-//         if map_layer.layer_instance.__identifier == "World" {
-//             // For every tile grid
-//             for tile_x in 0u32..map_layer.layer_instance.__c_wid as u32 {
-//                 for tile_y in 0u32..map_layer.layer_instance.__c_hei as u32 {
-//                     // Get the tile image
-//                     let tile_img = image
-//                         .view(tile_x * tile_size, tile_y * tile_size, tile_size, tile_size)
-//                         .to_image();
-//
-//                     // Try to generate a convex collision mesh from the tile
-//                     let mesh = create_convex_collider(
-//                         DynamicImage::ImageRgba8(tile_img),
-//                         &TesselatedColliderConfig {
-//                             // The maximum accuracy for collision mesh generation
-//                             vertice_separation: 0.,
-//                             ..Default::default()
-//                         },
-//                     );
-//
-//                     // If mesh generation was successful ( wouldn't be for empty tiles, etc. )
-//                     if let Some(mesh) = mesh {
-//                         // Spawn a collider as a child of the map layer
-//                         layer_commands.with_children(|layer| {
-//                             layer
-//                                 .spawn()
-//                                 .insert_bundle((
-//                                     mesh,
-//                                     Transform::from_xyz(
-//                                         (tile_x * tile_size + tile_size / 2) as f32,
-//                                         (tile_y * tile_size + tile_size / 2) as f32,
-//                                         0.,
-//                                     ),
-//                                     GlobalTransform::default(),
-//                                 ))
-//                                 .insert(PhysicMaterial {
-//                                     friction: 1.0,
-//                                     restitution: 0.1,
-//                                     ..Default::default()
-//                                 })
-//                                 .insert(
-//                                     CollisionLayers::all::<GameLayer>()
-//                                         .with_group(GameLayer::World),
-//                                 );
-//                         });
-//                     }
-//                 }
-//             }
-//         }
-//
-//         layer_commands
-//             // Make layer a static body
-//             .insert(RigidBody::Static)
-//             // Mark as loaded
-//             .insert(MapLayerLoaded);
 //     }
 // }
 

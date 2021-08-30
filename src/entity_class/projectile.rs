@@ -56,21 +56,15 @@ pub fn on_collide_apply_damage(
             let (eid_1, eid_2) = x.rigid_body_entities();
             let (layer_1, layer_2) = x.collision_layers();
 
-            // info!("Got collision {:?}", x.collision_layers());
-
             if is_creature(layer_1) && is_projectile(layer_2) {
-                // info!("Creature/Projectile confirmed");
                 Some((eid_1, eid_2))
             } else if is_projectile(layer_1) && is_creature(layer_2) {
-                // info!("Creature/Projectile confirmed");
                 Some((eid_2, eid_1))
             } else {
-                // info!("Creature/Projectile rejected");
                 None
             }
         })
         .for_each(|(creature_id, projectile_id)| {
-            // info!("Apply damage from {:?} to {:?}", projectile_id, creature_id);
             if let Ok(projectile) = projectiles.get(projectile_id) {
                 damaged.send(Damaged {
                     damage: projectile.damage,
@@ -90,20 +84,14 @@ pub fn on_collide_despawn(mut c: Commands, mut collisions: EventReader<Collision
             let (layer_1, layer_2) = x.collision_layers();
 
             if is_world(layer_1) && is_projectile(layer_2) {
-                // info!("World/Projectile confirmed");
-
                 Some((eid_1, eid_2))
             } else if is_projectile(layer_1) && is_world(layer_2) {
-                // info!("World/Projectile confirmed");
-
                 Some((eid_2, eid_1))
             } else {
-                // info!("World/Projectile rejected");
-
                 None
             }
         })
-        .for_each(|(world_id, projectile_id)| {
+        .for_each(|(_, projectile_id)| {
             c.entity(projectile_id).despawn();
         });
 }
@@ -146,7 +134,6 @@ pub fn cast_projectile(
     camera: Query<&Transform, With<MainCamera>>,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-    mut debug_lines: ResMut<DebugLines>,
 ) {
     // On click, fire a projectile from the player with a velocity relative to the distance the cursor is from the player
     // projectile should have limited bounces and limited lifetime
@@ -171,12 +158,7 @@ pub fn cast_projectile(
 
                 // apply the camera transform
                 let pos_wld = camera_transform.compute_matrix() * p.extend(0.0).extend(1.0);
-                // info!("World coords: {}/{}", pos_wld.x, pos_wld.y);
-
                 let vel = (start.translation.truncate() - pos_wld.truncate().truncate()) * 1.;
-                // let vel = Vec2::new(500., 0.);
-                // info!("Projectile velocity: {}", vel);
-                // info!("Player pos: {}", start.translation);
 
                 c.spawn()
                     .insert_bundle(SpriteSheetBundle {
@@ -209,20 +191,6 @@ pub fn cast_projectile(
                         density: 1.0,
                         friction: 0.0,
                     });
-
-                // info!("{:?} -> {:?}", pos_wld, start.translation);
-                // debug_lines.line(
-                //     Vec3::default(),
-                //     Vec3::new(start.translation.x, start.translation.y, 100.),
-                //     10.,
-                // );
-                // debug_lines.line(pos_wld.truncate(), Vec3::default(), 10.);
-                // debug_lines.line_colored(
-                //     Vec3::new(start.translation.x, start.translation.y, 100.),
-                //     pos_wld.truncate(),
-                //     10.,
-                //     Color::RED,
-                // )
             }
         }
     }

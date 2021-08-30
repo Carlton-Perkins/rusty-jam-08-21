@@ -1,13 +1,6 @@
-use crate::entity_class::enemy::spawn_enemy;
 use crate::entity_class::indexer::{IndexingError, ParseFields};
-use crate::entity_class::player::spawn_player;
-use crate::tags::Player;
-use crate::{GameLayer, MainCamera};
 use anyhow::anyhow;
 use bevy::prelude::*;
-use bevy_egui::egui::Shape;
-use bevy_prototype_debug_lines::DebugLines;
-use heron::{CollisionLayers, CollisionShape, RigidBody, RotationConstraints, Velocity};
 use serde_json::Value;
 use std::collections::HashMap;
 
@@ -30,24 +23,5 @@ impl ParseFields for Gold {
         Ok(Gold {
             value: value_number as i32,
         })
-    }
-}
-
-pub fn setup_gold(
-    mut c: Commands,
-    mut q: Query<(Entity, &mut Transform), (With<Gold>, Without<Sprite>)>,
-    assets: Res<AssetServer>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-    mut debug_lines: ResMut<DebugLines>,
-) {
-    // let gold_sprite = assets.load("gold.sprite.png");
-
-    for (gold, mut transform) in q.iter_mut() {
-        // c.entity(gold).insert(SpriteBundle {
-        //     material: materials.add(gold_sprite.clone().into()),
-        //     ..Default::default()
-        // });
-        // transform.translation += Vec3::new(0., 0., 150.)
-        // debug_lines.line(Vec3::default(), transform.translation, 10.);
     }
 }

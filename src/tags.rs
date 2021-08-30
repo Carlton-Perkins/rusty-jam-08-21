@@ -1,8 +1,4 @@
-use bevy::prelude::Transform;
-use bevy_inspector_egui::Inspectable;
-
 pub struct Player;
-
 pub struct MainCamera;
 
 #[derive(Clone, Eq, PartialEq)]

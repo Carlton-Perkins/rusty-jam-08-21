@@ -1,4 +1,4 @@
-use crate::map::MapTile;
+use crate::map::map_loader::MapTile;
 use crate::tags::WorldType;
 use crate::GameLayer;
 use bevy::prelude::*;

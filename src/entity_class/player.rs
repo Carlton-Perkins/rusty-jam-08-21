@@ -1,23 +1,14 @@
 use crate::entity_class::creature::Creature;
+use crate::entity_class::movement::{LastMovementDirection, MovementDirection};
 use crate::tags::{MainCamera, Player};
 use crate::GameLayer;
 use bevy::prelude::*;
 use heron::{CollisionLayers, CollisionShape, RigidBody, RotationConstraints, Velocity};
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
-pub enum MovementDirection {
-    Up,
-    Down,
-    Left,
-    Right,
-}
-
-pub struct LastMovementDirection(pub MovementDirection);
-
 pub fn spawn_player(
     mut c: &mut Commands,
     assets: &Res<AssetServer>,
-    mut texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     transform: &Transform,
 ) {
     let player_spritesheet = assets.load("player.spritemap.png");
@@ -83,7 +74,6 @@ pub fn player_movement(input: Res<Input<KeyCode>>, mut q: Query<&mut Velocity, W
         vel.linear *= friction;
 
         // Zero out velocities lower then 0.00001
-
         if vel.linear.x.abs() <= min_speed {
             vel.linear.x = 0.
         }
@@ -91,14 +81,7 @@ pub fn player_movement(input: Res<Input<KeyCode>>, mut q: Query<&mut Velocity, W
             vel.linear.y = 0.
         }
 
-        // Only update if different
-        // if real_vel.linear.abs_diff_eq(vel.linear, min_speed) {
         real_vel.linear = vel.linear;
-        //     info!(
-        //         "Updating player velocity From {:?} to {:?}",
-        //         real_vel.linear, vel.linear
-        //     );
-        // }
     }
 }
 

@@ -1,9 +1,16 @@
 use crate::entity_class::creature::Creature;
-use crate::entity_class::player::LastMovementDirection;
-use crate::entity_class::player::MovementDirection;
-use crate::tags::Player;
 use bevy::prelude::*;
 use heron::Velocity;
+
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Debug)]
+pub enum MovementDirection {
+    Up,
+    Down,
+    Left,
+    Right,
+}
+
+pub struct LastMovementDirection(pub MovementDirection);
 
 pub fn animate_creature(
     mut q: Query<
@@ -52,7 +59,7 @@ pub fn update_last_direction(
                     MovementDirection::Down
                 }
             }
-            _ => MovementDirection::Down,
+            _ => dir.0,
         };
 
         if dir.0 != new_dir {

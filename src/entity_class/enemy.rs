@@ -1,7 +1,7 @@
 use crate::entity_class::patrol_path::PatrolPath;
 
 use crate::entity_class::creature::Creature;
-use crate::entity_class::player::{LastMovementDirection, MovementDirection};
+use crate::entity_class::movement::{LastMovementDirection, MovementDirection};
 use crate::GameLayer;
 use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
@@ -20,7 +20,8 @@ impl Default for Enemy {
     fn default() -> Self {
         Enemy {
             state: EnemyState::Idle,
-            ..Default::default()
+            start_loc: Default::default(),
+            move_mod: Default::default(),
         }
     }
 }

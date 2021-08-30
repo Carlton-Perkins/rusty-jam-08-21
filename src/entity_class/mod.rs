@@ -50,7 +50,6 @@ impl Plugin for EntityClasses {
             .add_system(projectile::on_collide_apply_damage.system())
             .add_system(projectile::on_collide_despawn.system())
             .add_system(projectile::cast_projectile.system())
-            .add_system(lifetime::apply_lifetime.system())
-            .add_system(gold::setup_gold.system());
+            .add_system(lifetime::apply_lifetime.system());
     }
 }

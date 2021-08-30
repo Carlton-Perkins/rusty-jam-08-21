@@ -2,7 +2,7 @@ use crate::entity_class::door::{Door, DOOR_ID};
 use crate::entity_class::gold::{Gold, GOLD_ID};
 use crate::entity_class::patrol_path::{PatrolPath, PATROL_PATH_ID};
 use crate::entity_class::start_location::{StartLocation, START_LOCATION_ID};
-use crate::map::MapEntity;
+use crate::map::map_loader::MapEntity;
 use anyhow::{anyhow, Error};
 use bevy::ecs::component::Component;
 use bevy::prelude::*;
@@ -12,9 +12,8 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum IndexingError {
-    #[error("No known type to parse to")]
-    NoKnownType,
-
+    // #[error("No known type to parse to")]
+    // NoKnownType,
     #[error("Missing fields from type, failed to parse")]
     InvalidParse,
 }
