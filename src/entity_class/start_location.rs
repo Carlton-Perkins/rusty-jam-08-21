@@ -72,3 +72,10 @@ pub fn spawn_from_spawn_location(
         }
     }
 }
+
+// this probably should only be run during init, but its good enough for now...
+pub fn mark_spawns_as_invisible(mut q: Query<&mut Visible, With<StartLocation>>) {
+    for mut n in q.iter_mut() {
+        n.is_visible = false;
+    }
+}

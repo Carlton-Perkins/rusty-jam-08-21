@@ -22,6 +22,7 @@ impl Plugin for EntityClasses {
     fn build(&self, app: &mut AppBuilder) {
         app.add_system(indexer::index_entities.system())
             .add_system(start_location::spawn_from_spawn_location.system())
+            .add_system(start_location::mark_spawns_as_invisible.system())
             .add_stage(GameStage, SystemStage::parallel())
             .add_system_to_stage(GameStage, player::player_movement.system())
             .add_system_to_stage(GameStage, player::move_camera_with_player.system())
